@@ -2,363 +2,89 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
-    <title>CRUD Libros - Hola servidor</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: #0f172a;
-            color: #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 1rem;
-        }
-        .card {
-            background: #020617;
-            padding: 2rem 2.5rem;
-            border-radius: 1.5rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            border: 1px solid #1e293b;
-            width: 100%;
-            max-width: 900px;
-        }
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 0.25rem;
-        }
-        .subtitle {
-            margin: 0 0 1.5rem 0;
-            color: #9ca3af;
-            font-size: 0.95rem;
-        }
-        .tag {
-            display: inline-block;
-            margin-bottom: 1.25rem;
-            padding: 0.35rem 0.9rem;
-            border-radius: 999px;
-            background: #1e293b;
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
+    <title>Mini CRUD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        .grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.5fr);
-            gap: 1.5rem;
-        }
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
 
-        form {
-            text-align: left;
-            background: #020617;
-            border-radius: 1rem;
-            padding: 1rem 1.25rem;
-            border: 1px solid #1f2937;
-        }
-        .form-group {
-            margin-bottom: 0.75rem;
-        }
-        label {
-            display: block;
-            font-size: 0.85rem;
-            margin-bottom: 0.15rem;
-            color: #cbd5f5;
-        }
-        input {
-            width: 100%;
-            padding: 0.45rem 0.65rem;
-            border-radius: 0.6rem;
-            border: 1px solid #374151;
-            background: #020617;
-            color: #e5e7eb;
-            font-size: 0.9rem;
-        }
-        input:focus {
-            outline: none;
-            border-color: #38bdf8;
-            box-shadow: 0 0 0 1px #38bdf8;
-        }
-        .actions {
-            margin-top: 0.75rem;
-            display: flex;
-            gap: 0.5rem;
-        }
-        button {
-            border: none;
-            border-radius: 999px;
-            padding: 0.45rem 1.1rem;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-        .btn-primary {
-            background: #22c55e;
-            color: #022c22;
-            font-weight: 600;
-        }
-        .btn-secondary {
-            background: #111827;
-            color: #e5e7eb;
-            border: 1px solid #374151;
-        }
-        .btn-small {
-            padding: 0.25rem 0.65rem;
-            font-size: 0.8rem;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-        }
-        th, td {
-            padding: 0.45rem 0.5rem;
-            border-bottom: 1px solid #111827;
-            text-align: left;
-        }
-        th {
-            font-weight: 600;
-            color: #9ca3af;
-            background: #020617;
-            position: sticky;
-            top: 0;
-        }
-        tbody tr:nth-child(even) {
-            background: #020617;
-        }
-        tbody tr:hover {
-            background: #111827;
-        }
-        .table-wrapper {
-            max-height: 260px;
-            overflow: auto;
-            border-radius: 0.75rem;
-            border: 1px solid #1f2937;
-            background: #020617;
-        }
-        .empty-state {
-            text-align: center;
-            color: #6b7280;
-            font-size: 0.85rem;
-            padding: 1rem;
-        }
-        .pill {
-            display: inline-block;
-            padding: 0.2rem 0.5rem;
-            border-radius: 999px;
-            background: #1e293b;
-            font-size: 0.75rem;
-        }
-
-        @media (max-width: 800px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <!-- Tu CSS -->
+    <link rel="stylesheet" href="/FRONTEND/CSS/styles.css">
 </head>
-<body>
-    <div class="card">
-        <h1>📚 CRUD de Libros</h1>
-        <p class="subtitle">
-            Esta página está en tu Ubuntu Server con Cloudflare Tunnel.
+<body class="bg-dark text-light">
+
+    <div class="container py-4">
+        <h1 class="h3 mb-3">Mini CRUD</h1>
+        <p class="text-secondary mb-4">
+            Ejemplo simple con Bootstrap, JS plano y sin backend.
         </p>
-        <span class="tag">Proyecto de prueba</span>
 
-        <div class="grid">
-            <!-- FORMULARIO -->
-            <form id="book-form">
-                <input type="hidden" id="editIndex" value="">
-                <div class="form-group">
-                    <label for="titulo">Título</label>
-                    <input type="text" id="titulo" required placeholder="Ej. El señor de los anillos">
-                </div>
-                <div class="form-group">
-                    <label for="autor">Autor</label>
-                    <input type="text" id="autor" required placeholder="Ej. J.R.R. Tolkien">
-                </div>
-                <div class="form-group">
-                    <label for="anio">Año</label>
-                    <input type="number" id="anio" min="0" max="2100" required placeholder="Ej. 1954">
-                </div>
-                <div class="form-group">
-                    <label for="categoria">Categoría</label>
-                    <input type="text" id="categoria" placeholder="Ej. Fantasía">
-                </div>
+        <!-- FORMULARIO -->
+        <form id="item-form" class="row g-2 align-items-end mb-4">
+            <input type="hidden" id="edit-index" value="">
 
-                <div class="actions">
-                    <button type="submit" class="btn-primary" id="save-btn">Guardar</button>
-                    <button type="button" class="btn-secondary" id="cancel-btn" style="display:none;">Cancelar</button>
-                </div>
-            </form>
-
-            <!-- TABLA -->
-            <div>
-                <div class="table-wrapper" id="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Título</th>
-                                <th>Autor</th>
-                                <th>Año</th>
-                                <th>Categoría</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="books-body">
-                            <!-- filas dinámicas -->
-                        </tbody>
-                    </table>
-                </div>
-                <div class="empty-state" id="empty-state">
-                    No hay libros registrados aún. Agrega uno con el formulario 👉
-                </div>
+            <div class="col-12 col-md-4">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input
+                    type="text"
+                    id="nombre"
+                    class="form-control form-control-sm"
+                    placeholder="Ej. Elemento 1"
+                    required
+                >
             </div>
+
+            <div class="col-12 col-md-5">
+                <label for="descripcion" class="form-label">Descripción</label>
+                <input
+                    type="text"
+                    id="descripcion"
+                    class="form-control form-control-sm"
+                    placeholder="Opcional"
+                >
+            </div>
+
+            <div class="col-12 col-md-3 d-flex gap-2">
+                <button type="submit" id="btn-guardar" class="btn btn-success btn-sm flex-grow-1">
+                    Guardar
+                </button>
+                <button type="button" id="btn-cancelar" class="btn btn-outline-light btn-sm flex-grow-1 d-none">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+
+        <!-- TABLA -->
+        <div class="table-responsive">
+            <table class="table table-dark table-striped table-bordered align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">#</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th style="width: 140px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="items-tbody">
+                    <!-- Filas dinámicas -->
+                </tbody>
+            </table>
         </div>
+
+        <p id="empty-msg" class="text-center text-secondary mt-3">
+            Aún no hay elementos. Agrega uno con el formulario de arriba.
+        </p>
     </div>
 
-    <script>
-        // Datos en memoria
-        let libros = [];
-
-        const STORAGE_KEY = "crud_libros";
-
-        const form = document.getElementById("book-form");
-        const tituloInput = document.getElementById("titulo");
-        const autorInput = document.getElementById("autor");
-        const anioInput = document.getElementById("anio");
-        const categoriaInput = document.getElementById("categoria");
-        const editIndexInput = document.getElementById("editIndex");
-        const saveBtn = document.getElementById("save-btn");
-        const cancelBtn = document.getElementById("cancel-btn");
-
-        const tbody = document.getElementById("books-body");
-        const emptyState = document.getElementById("empty-state");
-
-        function guardarEnLocalStorage() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(libros));
-        }
-
-        function cargarDesdeLocalStorage() {
-            const data = localStorage.getItem(STORAGE_KEY);
-            if (data) {
-                try {
-                    libros = JSON.parse(data);
-                } catch (e) {
-                    libros = [];
-                }
-            }
-        }
-
-        function limpiarFormulario() {
-            form.reset();
-            editIndexInput.value = "";
-            saveBtn.textContent = "Guardar";
-            cancelBtn.style.display = "none";
-        }
-
-        function renderTabla() {
-            tbody.innerHTML = "";
-
-            if (!libros.length) {
-                emptyState.style.display = "block";
-                return;
-            } else {
-                emptyState.style.display = "none";
-            }
-
-            libros.forEach((libro, index) => {
-                const tr = document.createElement("tr");
-
-                tr.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${libro.titulo}</td>
-                    <td>${libro.autor}</td>
-                    <td><span class="pill">${libro.anio}</span></td>
-                    <td>${libro.categoria || "-"}</td>
-                    <td>
-                        <button class="btn-secondary btn-small" data-action="edit" data-index="${index}">Editar</button>
-                        <button class="btn-primary btn-small" data-action="delete" data-index="${index}" style="background:#ef4444;color:#fee2e2;">Borrar</button>
-                    </td>
-                `;
-
-                tbody.appendChild(tr);
-            });
-        }
-
-        // Crear / Actualizar
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            const titulo = tituloInput.value.trim();
-            const autor = autorInput.value.trim();
-            const anio = anioInput.value.trim();
-            const categoria = categoriaInput.value.trim();
-
-            if (!titulo || !autor || !anio) {
-                alert("Título, Autor y Año son obligatorios.");
-                return;
-            }
-
-            const libro = { titulo, autor, anio, categoria };
-
-            const editIndex = editIndexInput.value;
-
-            if (editIndex === "") {
-                // CREATE
-                libros.push(libro);
-            } else {
-                // UPDATE
-                libros[editIndex] = libro;
-            }
-
-            guardarEnLocalStorage();
-            renderTabla();
-            limpiarFormulario();
-        });
-
-        // Cancelar edición
-        cancelBtn.addEventListener("click", function () {
-            limpiarFormulario();
-        });
-
-        // Delegación de eventos para Editar / Borrar
-        tbody.addEventListener("click", function (e) {
-            const btn = e.target;
-            const action = btn.getAttribute("data-action");
-            const index = btn.getAttribute("data-index");
-
-            if (action === "edit") {
-                const libro = libros[index];
-                tituloInput.value = libro.titulo;
-                autorInput.value = libro.autor;
-                anioInput.value = libro.anio;
-                categoriaInput.value = libro.categoria;
-
-                editIndexInput.value = index;
-                saveBtn.textContent = "Actualizar";
-                cancelBtn.style.display = "inline-block";
-            }
-
-            if (action === "delete") {
-                if (confirm("¿Seguro que quieres borrar este libro?")) {
-                    libros.splice(index, 1);
-                    guardarEnLocalStorage();
-                    renderTabla();
-                    limpiarFormulario();
-                }
-            }
-        });
-
-        // Inicializar
-        cargarDesdeLocalStorage();
-        renderTabla();
+    <!-- Bootstrap JS (opcional, por si luego usas componentes) -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     </script>
+
+    <!-- Tu JS -->
+    <script src="/FRONTEND/JS/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,15 @@
+body {
+    /* solo para que se vea mejor centrado en pantallas grandes */
+    min-height: 100vh;
+}
+
+#item-form {
+    background-color: #111827;
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid #1f2937;
+}
+
+#empty-msg {
+    font-size: 0.9rem;
+}
