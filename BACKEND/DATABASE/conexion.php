@@ -1,7 +1,7 @@
 <?php
 // BACKEND/DATABASE/conexion.php
 
-$DB_PATH = __DIR__ . 'DATABASE.db';
+$DB_PATH = __DIR__ . '/DATABASE.db';
 
 try {
     $pdo = new PDO('sqlite:' . $DB_PATH);
@@ -12,3 +12,4 @@ try {
     echo 'Error de conexión a la base de datos: ' . $e->getMessage();
     exit;
 }
+?>
