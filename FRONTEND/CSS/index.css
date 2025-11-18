@@ -30,7 +30,7 @@ body {
 /* =================== */
 /* TARJETAS GLASS      */
 /* =================== */
-cc==
+
 .card {
   background: rgba(255, 255, 255, 0.14) !important;
   backdrop-filter: blur(22px) saturate(180%);
