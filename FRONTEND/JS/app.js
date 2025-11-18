@@ -1,115 +1,93 @@
-// Array en memoria (si quieres, luego lo cambias por peticiones a backend)
-let items = [];
+// FRONTEND/JS/app.js
 
-// Referencias al DOM
-const form = document.getElementById('item-form');
-const nombreInput = document.getElementById('nombre');
-const descripcionInput = document.getElementById('descripcion');
-const editIndexInput = document.getElementById('edit-index');
-const btnGuardar = document.getElementById('btn-guardar');
-const btnCancelar = document.getElementById('btn-cancelar');
-const tbody = document.getElementById('items-tbody');
-const emptyMsg = document.getElementById('empty-msg');
+    document.addEventListener('DOMContentLoaded', () => {
+    cargarAnimales();
+});
 
-// Renderizar la tabla
-function renderTabla() {
-    tbody.innerHTML = '';
+    function cargarAnimales() {
+    const contenedor = document.getElementById('lista-animales');
+    if (!contenedor) return;
 
-    if (items.length === 0) {
-        emptyMsg.classList.remove('d-none');
+    contenedor.innerHTML = '<p>Cargando animales...</p>';
+
+    fetch('BACKEND/EVENTS/listar_animales.php')
+    .then(res => res.json())
+    .then(animales => {
+    contenedor.innerHTML = '';
+
+    if (!animales || animales.length === 0) {
+        contenedor.innerHTML = '<p>No hay animales disponibles por ahora.</p>';
         return;
     }
 
-    emptyMsg.classList.add('d-none');
+    const row = document.createElement('div');
+    row.className = 'row';
 
-    items.forEach((item, index) => {
-        const tr = document.createElement('tr');
+    animales.forEach(a => {
+        row.appendChild(crearCardAnimal(a));
+    });
 
-        tr.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${item.nombre}</td>
-            <td>${item.descripcion || '-'}</td>
-            <td>
-                <button class="btn btn-sm btn-outline-info me-1" data-action="edit" data-index="${index}">
-                    Editar
-                </button>
-                <button class="btn btn-sm btn-outline-danger" data-action="delete" data-index="${index}">
-                    Eliminar
-                </button>
-            </td>
-        `;
-
-        tbody.appendChild(tr);
+    contenedor.appendChild(row);
+    })
+    .catch(err => {
+    console.error(err);
+    contenedor.innerHTML =
+        '<p class="text-danger">Error al cargar los animales. Intenta más tarde.</p>';
     });
 }
 
-// Limpiar formulario y salir de modo edición
-function resetForm() {
-    form.reset();
-    editIndexInput.value = '';
-    btnGuardar.textContent = 'Guardar';
-    btnGuardar.classList.remove('btn-primary');
-    btnGuardar.classList.add('btn-success');
-    btnCancelar.classList.add('d-none');
+    function crearCardAnimal(animal) {
+    const col = document.createElement('div');
+    col.className = 'col-md-4 mb-4';
+
+    const card = document.createElement('div');
+    card.className = 'card h-100 shadow-sm card-animal';
+
+    if (animal.ruta_foto) {
+    const img = document.createElement('img');
+    img.src = animal.ruta_foto;
+    img.alt = `Foto de ${animal.nombre}`;
+    img.className = 'card-img-top';
+    card.appendChild(img);
+    }
+
+    const body = document.createElement('div');
+    body.className = 'card-body';
+
+    const title = document.createElement('h5');
+    title.className = 'card-title';
+    title.textContent = animal.nombre;
+
+    const subtitle = document.createElement('p');
+    subtitle.className = 'card-subtitle mb-2 text-muted';
+    subtitle.textContent = `${animal.especie} · ${animal.raza}`;
+
+    const desc = document.createElement('p');
+    desc.className = 'card-text';
+    desc.textContent = animal.descripcion || 'Sin descripción';
+
+    const badge = document.createElement('span');
+    badge.className = 'badge bg-success';
+    badge.textContent = animal.estado_salud || 'Saludable';
+
+    body.appendChild(title);
+    body.appendChild(subtitle);
+    body.appendChild(desc);
+    body.appendChild(badge);
+
+    const footer = document.createElement('div');
+    footer.className = 'card-footer bg-transparent border-0';
+
+    const btn = document.createElement('a');
+    btn.href = '#contacto';
+    btn.className = 'btn btn-primary w-100';
+    btn.textContent = 'Quiero adoptar';
+
+    footer.appendChild(btn);
+
+    card.appendChild(body);
+    card.appendChild(footer);
+    col.appendChild(card);
+
+    return col;
 }
-
-// Guardar (CREATE / UPDATE)
-form.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const nombre = nombreInput.value.trim();
-    const descripcion = descripcionInput.value.trim();
-
-    if (!nombre) return;
-
-    const item = { nombre, descripcion };
-    const editIndex = editIndexInput.value;
-
-    if (editIndex === '') {
-        // CREATE
-        items.push(item);
-    } else {
-        // UPDATE
-        items[parseInt(editIndex, 10)] = item;
-    }
-
-    renderTabla();
-    resetForm();
-});
-
-// Cancelar edición
-btnCancelar.addEventListener('click', function () {
-    resetForm();
-});
-
-// Delegación de eventos para botones Editar / Eliminar
-tbody.addEventListener('click', function (e) {
-    const btn = e.target.closest('button');
-    if (!btn) return;
-
-    const action = btn.dataset.action;
-    const index = parseInt(btn.dataset.index, 10);
-
-    if (action === 'edit') {
-        const item = items[index];
-        nombreInput.value = item.nombre;
-        descripcionInput.value = item.descripcion;
-
-        editIndexInput.value = index;
-        btnGuardar.textContent = 'Actualizar';
-        btnGuardar.classList.remove('btn-success');
-        btnGuardar.classList.add('btn-primary');
-        btnCancelar.classList.remove('d-none');
-    }
-
-    if (action === 'delete') {
-        if (confirm('¿Eliminar este elemento?')) {
-            items.splice(index, 1);
-            renderTabla();
-            resetForm();
-        }
-    }
-});
-
-// Inicial
-renderTabla();
