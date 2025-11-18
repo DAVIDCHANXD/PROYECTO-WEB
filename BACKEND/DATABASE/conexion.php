@@ -1,7 +1,7 @@
 <?php
 // BACKEND/DATABASE/conexion.php
 
-$DB_PATH = __DIR__ . '/BACKEND/DATABASE/DATABASE.db';
+$DB_PATH = __DIR__ . 'DATABASE.db';
 
 try {
     $pdo = new PDO('sqlite:' . $DB_PATH);

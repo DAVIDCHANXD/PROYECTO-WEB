@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="mb-3">
                             <label class="form-label">Correo electrónico</label>
                             <input type="email" name="email" class="form-control"
-                                   required value="<?php echo htmlspecialchars($email ?? ''); ?>">
+                                required value="<?php echo htmlspecialchars($email ?? ''); ?>">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Contraseña</label>
