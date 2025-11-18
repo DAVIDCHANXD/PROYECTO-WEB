@@ -86,9 +86,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p class="text-center mb-0">
                         ¿No tienes cuenta?
                         <a href="register.php">Registrarte</a>
-
-                        <a href="/forgot_password.phpforgot_password.php">¿Olvidaste tu contraseña?</a>
-
+                    </p>
+                    <p class="text-center mb-0">
+                        <a href="forgot_password.php">¿Olvidaste tu contraseña?</a>
                     </p>
                     <p class="text-center mt-2 mb-0">
                         <a href="/index.html">← Volver al sitio público</a>
