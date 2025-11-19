@@ -1,3 +1,34 @@
+<?php
+// FRONTEND/.../animales.php
+
+// Conexión a la base de datos
+// Ojo con la ruta: este archivo está 2 carpetas debajo de la raíz (por eso ../../)
+// ajusta si tu estructura es distinta
+require_once __DIR__ . '/../../BACKEND/DATABASE/conexion.php';
+
+$animales   = [];
+$errorAnimales = '';
+
+try {
+    // Ajusta nombres de tabla y columnas según tu BD
+    $sql = "SELECT 
+                id_animal,
+                nombre,
+                especie,
+                tamanio,
+                edad,
+                descripcion,
+                foto_url,
+                disponible
+            FROM animales
+            WHERE disponible = 1";  // o el campo que uses para marcar que sigue en adopción
+
+    $stmt = $pdo->query($sql);
+    $animales = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $errorAnimales = 'Error al cargar los animales: ' . $e->getMessage();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -59,7 +90,7 @@
         </div>
       </div>
 
-      <!-- Filtros (tú luego los conectas con JS o PHP) -->
+      <!-- Filtros -->
       <ul class="nav nav-pills small mb-4" id="filtros-animales">
         <li class="nav-item">
           <button class="nav-link active" data-filter="todos" type="button">Todos</button>
@@ -75,59 +106,82 @@
         </li>
       </ul>
 
-      <!-- Aquí tu JS / PHP puede pintar las cards dinámicamente -->
+      <!-- Lista dinámica de animales -->
       <div id="lista-animales" class="row g-4">
-        <!-- Ejemplos estáticos, puedes borrarlos cuando conectes la BD -->
-        <div class="col-md-4" data-especie="perro">
-          <div class="card h-100 shadow-sm border-0 animal-card">
-            <img src="https://images.pexels.com/photos/59523/pexels-photo-59523.jpeg"
-                 class="card-img-top" alt="Perro">
-            <div class="card-body">
-              <h5 class="card-title mb-1">Rocky</h5>
-              <p class="text-muted small mb-2">Perro · Mediano · 2 años</p>
-              <p class="card-text small">
-                Juguetón y sociable, ideal para familias con niños.
-              </p>
-              <button class="btn btn-outline-primary btn-sm">
-                Más información
-              </button>
-            </div>
-          </div>
-        </div>
 
-        <div class="col-md-4" data-especie="gato">
-          <div class="card h-100 shadow-sm border-0 animal-card">
-            <img src="https://images.pexels.com/photos/20787/pexels-photo.jpg"
-                 class="card-img-top" alt="Gato">
-            <div class="card-body">
-              <h5 class="card-title mb-1">Luna</h5>
-              <p class="text-muted small mb-2">Gato · Pequeño · 1 año</p>
-              <p class="card-text small">
-                Tranquila, cariñosa y se adapta bien a espacios pequeños.
-              </p>
-              <button class="btn btn-outline-primary btn-sm">
-                Más información
-              </button>
+        <?php if ($errorAnimales): ?>
+          <div class="col-12">
+            <div class="alert alert-danger">
+              <?php echo htmlspecialchars($errorAnimales); ?>
             </div>
           </div>
-        </div>
+        <?php endif; ?>
 
-        <div class="col-md-4" data-especie="otros">
-          <div class="card h-100 shadow-sm border-0 animal-card">
-            <img src="https://images.pexels.com/photos/52500/horse-herd-fog-nature-52500.jpeg"
-                 class="card-img-top" alt="Otro">
-            <div class="card-body">
-              <h5 class="card-title mb-1">Max</h5>
-              <p class="text-muted small mb-2">Otro · Grande · 3 años</p>
-              <p class="card-text small">
-                Animal de granja rescatado, requiere espacio amplio.
-              </p>
-              <button class="btn btn-outline-primary btn-sm">
-                Más información
-              </button>
+        <?php if (!$errorAnimales && empty($animales)): ?>
+          <div class="col-12">
+            <div class="alert alert-info">
+              Por ahora no hay animales disponibles en adopción.
             </div>
           </div>
-        </div>
+        <?php endif; ?>
+
+        <?php foreach ($animales as $animal): ?>
+          <?php
+            // Normalizamos algunos campos
+            $nombre     = $animal['nombre']      ?? 'Sin nombre';
+            $especieRaw = $animal['especie']     ?? 'otros';
+            $especie    = strtolower($especieRaw);
+            if (!in_array($especie, ['perro', 'gato'])) {
+                $especie = 'otros';
+            }
+
+            $tamanio  = $animal['tamanio']  ?? '';
+            $edad     = $animal['edad']     ?? '';
+            $desc     = $animal['descripcion'] ?? '';
+            $foto     = $animal['foto_url'] ?? '';
+
+            if (empty($foto)) {
+                // Imagen por defecto si no hay foto
+                $foto = 'https://via.placeholder.com/600x400?text=En+adopcion';
+            }
+
+            // Subtítulo tipo: "Perro · Mediano · 2 años"
+            $partesSub = [];
+            if (!empty($especieRaw)) $partesSub[] = $especieRaw;
+            if (!empty($tamanio))   $partesSub[] = $tamanio;
+            if ($edad !== '')       $partesSub[] = $edad . ' años';
+            $subtitulo = implode(' · ', $partesSub);
+          ?>
+
+          <div class="col-md-4" data-especie="<?php echo htmlspecialchars($especie); ?>">
+            <div class="card h-100 shadow-sm border-0 animal-card">
+              <img src="<?php echo htmlspecialchars($foto); ?>"
+                   class="card-img-top"
+                   alt="Foto de <?php echo htmlspecialchars($nombre); ?>">
+              <div class="card-body">
+                <h5 class="card-title mb-1">
+                  <?php echo htmlspecialchars($nombre); ?>
+                </h5>
+
+                <?php if ($subtitulo): ?>
+                  <p class="text-muted small mb-2">
+                    <?php echo htmlspecialchars($subtitulo); ?>
+                  </p>
+                <?php endif; ?>
+
+                <?php if (!empty($desc)): ?>
+                  <p class="card-text small">
+                    <?php echo nl2br(htmlspecialchars($desc)); ?>
+                  </p>
+                <?php endif; ?>
+
+                <button class="btn btn-outline-primary btn-sm">
+                  Más información
+                </button>
+              </div>
+            </div>
+          </div>
+        <?php endforeach; ?>
 
       </div>
     </div>
@@ -142,6 +196,37 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Botón "Actualizar lista"
+function cargarAnimales() {
+  location.reload();
+}
+
+// Filtros simples por data-especie
+document.addEventListener('DOMContentLoaded', () => {
+  const botones = document.querySelectorAll('#filtros-animales .nav-link');
+  const cards   = document.querySelectorAll('#lista-animales [data-especie]');
+
+  botones.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filtro = btn.getAttribute('data-filter');
+
+      botones.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      cards.forEach(card => {
+        const especie = card.getAttribute('data-especie');
+
+        if (filtro === 'todos' || especie === filtro) {
+          card.classList.remove('d-none');
+        } else {
+          card.classList.add('d-none');
+        }
+      });
+    });
+  });
+});
+</script>
 <script src="/FRONTEND/JS/app.js"></script>
 </body>
 </html>
