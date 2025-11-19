@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($email === '' || $password === '') {
         $errores = 'Por favor ingresa tu correo y contraseña.';
     } else {
+        // Buscar usuario activo por correo
         $stmt = $pdo->prepare('SELECT * FROM usuarios WHERE email = :email AND activo = 1');
         $stmt->execute([':email' => $email]);
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -20,10 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$usuario) {
             $errores = 'Usuario o contraseña incorrectos.';
         } else {
-            $hash = $usuario['password_hash'];
+            $hash = $usuario['password_hash'] ?? '';
 
-            // Normal: usar password_verify, pero dejo compatibilidad si el admin viejo tiene contraseña en texto plano
-            $ok = password_verify($password, $hash) || $password === $hash;
+            // Normal: usar password_verify
+            // Dejo compatibilidad por si algún usuario viejo quedó con contraseña en texto plano
+            $ok = false;
+            if (!empty($hash)) {
+                if (password_verify($password, $hash) || $password === $hash) {
+                    $ok = true;
+                }
+            }
 
             if ($ok) {
                 $_SESSION['id_usuario'] = $usuario['id_usuario'];

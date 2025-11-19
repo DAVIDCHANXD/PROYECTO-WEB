@@ -28,43 +28,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (strlen($password) < 6) {
         $errores = 'La contraseña debe tener al menos 6 caracteres.';
     } else {
-        // Verificar que el correo no exista
-        $stmt = $pdo->prepare('SELECT COUNT(*) FROM usuarios WHERE email = :email');
-        $stmt->execute([':email' => $email]);
-        if ($stmt->fetchColumn() > 0) {
-            $errores = 'Ya existe una cuenta con ese correo.';
-        } else {
-            // Buscar el rol de "adoptante"
-            $stmtRol = $pdo->prepare('SELECT id_rol FROM roles WHERE nombre_rol = :rol');
-            $stmtRol->execute([':rol' => 'adoptante']);
-            $idRol = $stmtRol->fetchColumn();
-            if (!$idRol) {
-                $idRol = 3; // por si acaso
-            }
+        try {
+            // Verificar que el correo no exista
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM usuarios WHERE email = :email');
+            $stmt->execute([':email' => $email]);
 
-            $hash = password_hash($password, PASSWORD_DEFAULT);
+            if ($stmt->fetchColumn() > 0) {
+                $errores = 'Ya existe una cuenta con ese correo.';
+            } else {
+                // Buscar el rol de "adoptante" en la tabla roles (columna nombre)
+                $stmtRol = $pdo->prepare('SELECT id_rol FROM roles WHERE nombre = :rol');
+                $stmtRol->execute([':rol' => 'adoptante']);
+                $idRol = $stmtRol->fetchColumn();
 
-            $stmtIns = $pdo->prepare('
-                INSERT INTO usuarios (nombre, apellido, email, password_hash, telefono, id_rol)
-                VALUES (:nombre, :apellido, :email, :password_hash, :telefono, :id_rol)
-            ');
+                // Si no se encuentra, por seguridad definimos un rol por defecto (3, como comentaste)
+                if (!$idRol) {
+                    $idRol = 3;
+                }
 
-            try {
+                // Hashear la contraseña
+                $hash = password_hash($password, PASSWORD_DEFAULT);
+
+                // Insertar usuario nuevo
+                $stmtIns = $pdo->prepare('
+                    INSERT INTO usuarios (id_rol, nombre, apellidos, email, password_hash, telefono)
+                    VALUES (:id_rol, :nombre, :apellidos, :email, :password_hash, :telefono)
+                ');
+
                 $stmtIns->execute([
+                    ':id_rol'        => $idRol,
                     ':nombre'        => $nombre,
-                    ':apellido'      => $apellido,
+                    ':apellidos'     => $apellido,   // columna apellidos en la BD
                     ':email'         => $email,
                     ':password_hash' => $hash,
                     ':telefono'      => $telefono,
-                    ':id_rol'        => $idRol,
                 ]);
 
                 $exito = 'Tu cuenta se creó correctamente. Ahora puedes iniciar sesión.';
-                // Limpiar campos
+                // Limpiar campos del formulario
                 $nombre = $apellido = $email = $telefono = '';
-            } catch (PDOException $e) {
-                $errores = 'Error al registrar usuario: ' . $e->getMessage();
             }
+        } catch (PDOException $e) {
+            $errores = 'Error al registrar usuario: ' . $e->getMessage();
         }
     }
 }
