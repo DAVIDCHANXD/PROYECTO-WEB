@@ -1,7 +1,7 @@
 <?php
 // FRONTEND/.../animales.php
 
-require_once __DIR__ . '/BACKEND/DATABASE/conexion.php';
+require_once __DIR__ . '/../../BACKEND/DATABASE/conexion.php';
 
 $animales      = [];
 $errorAnimales = '';
