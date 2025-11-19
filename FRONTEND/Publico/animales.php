@@ -3,33 +3,42 @@
 
 require_once __DIR__ . '/../../BACKEND/DATABASE/conexion.php';
 
-$animales     = [];
+$animales      = [];
 $errorAnimales = '';
 
+// Mapas para traducir los IDs a texto (según los INSERT que metimos)
+$mapTipos = [
+    1 => 'Perro',
+    2 => 'Gato',
+    3 => 'Otros',
+];
+
+$mapTamanos = [
+    1 => 'Grande',
+    2 => 'Mediano',
+    3 => 'Pequeño',
+];
+
 try {
-    // Traemos datos de animales + tipo + tamaño + foto principal
+    // SOLO tabla animales, nada de JOINs por ahora
     $sql = "
         SELECT 
-            a.id_animal,
-            a.nombre,
-            ta.nombre   AS especie,
-            tm.nombre   AS tamanio,
-            a.edad_anios,
-            a.descripcion,
-            f.url       AS foto_url
-        FROM animales a
-        JOIN tipos_animal ta ON a.id_tipo   = ta.id_tipo
-        JOIN tamanos      tm ON a.id_tamano = tm.id_tamano
-        LEFT JOIN fotos_animal f 
-            ON f.id_animal = a.id_animal AND f.es_principal = 1
-        WHERE a.visible = 1
-          AND a.adoptado = 0
-        ORDER BY a.fecha_registro DESC
+            id_animal,
+            nombre,
+            id_tipo,
+            id_tamano,
+            edad_anios,
+            descripcion
+        FROM animales
+        WHERE visible = 1
+          AND adoptado = 0
+        ORDER BY fecha_registro DESC
     ";
 
-    $stmt = $pdo->query($sql);
+    $stmt     = $pdo->query($sql);
     $animales = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
+    // Si algo truena, mostramos el mensaje SQL para saber qué pasa
     $errorAnimales = 'Error al cargar los animales: ' . $e->getMessage();
 }
 ?>
@@ -131,19 +140,18 @@ try {
 
         <?php foreach ($animales as $animal): ?>
           <?php
-            $nombre      = $animal['nombre']        ?? 'Sin nombre';
-            $especieRaw  = $animal['especie']       ?? 'Otros';   // viene de tipos_animal.nombre
-            $tamanio     = $animal['tamanio']       ?? '';        // viene de tamanos.nombre
-            $edad        = $animal['edad_anios']    ?? '';
-            $desc        = $animal['descripcion']   ?? '';
-            $foto        = $animal['foto_url']      ?? '';
+            $nombre    = $animal['nombre']      ?? 'Sin nombre';
+            $idTipo    = (int)($animal['id_tipo']    ?? 0);
+            $idTamano  = (int)($animal['id_tamano']  ?? 0);
+            $edad      = $animal['edad_anios']  ?? '';
+            $desc      = $animal['descripcion'] ?? '';
 
-            if (empty($foto)) {
-                $foto = 'https://via.placeholder.com/600x400?text=En+adopcion';
-            }
+            // Traducir IDs a texto
+            $especieRaw = $mapTipos[$idTipo]    ?? 'Otros';
+            $tamanio    = $mapTamanos[$idTamano]?? '';
 
-            // Para los filtros: solo perro / gato / otros
-            $especieLower = strtolower($especieRaw);
+            // Para filtros
+            $especieLower  = strtolower($especieRaw);
             if ($especieLower === 'perro' || $especieLower === 'perros') {
                 $especieFiltro = 'perro';
             } elseif ($especieLower === 'gato' || $especieLower === 'gatos') {
@@ -152,12 +160,15 @@ try {
                 $especieFiltro = 'otros';
             }
 
-            // Subtítulo tipo: "Perro · Mediano · 2 años"
+            // Subtítulo: "Perro · Mediano · 2 años"
             $partesSub = [];
             if (!empty($especieRaw)) $partesSub[] = $especieRaw;
             if (!empty($tamanio))    $partesSub[] = $tamanio;
             if ($edad !== '' && $edad !== null) $partesSub[] = $edad . ' años';
             $subtitulo = implode(' · ', $partesSub);
+
+            // Por ahora usamos imagen por defecto (luego conectamos fotos_animal)
+            $foto = 'https://via.placeholder.com/600x400?text=En+adopcion';
           ?>
 
           <div class="col-md-4" data-especie="<?php echo htmlspecialchars($especieFiltro); ?>">
