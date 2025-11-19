@@ -23,10 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $hash = $usuario['password_hash'] ?? '';
 
-            // Normal: usar password_verify
-            // Dejo compatibilidad por si algún usuario viejo quedó con contraseña en texto plano
             $ok = false;
             if (!empty($hash)) {
+                // Normal: password almacenada con password_hash
                 if (password_verify($password, $hash) || $password === $hash) {
                     $ok = true;
                 }
@@ -53,7 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Iniciar sesión - AdoptaConAmor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../FRONTEND/CSS/styles.css">

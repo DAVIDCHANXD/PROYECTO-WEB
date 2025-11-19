@@ -2,7 +2,6 @@
 // BACKEND/Privada/dashboard.php
 session_start();
 
-// Si no hay sesión, redirige al login dentro de esta misma carpeta
 if (!isset($_SESSION['id_usuario'])) {
     header('Location: login.php');
     exit;
@@ -38,12 +37,10 @@ $nombre = $_SESSION['nombre'] ?? 'Usuario';
           Hola, <?php echo htmlspecialchars($nombre); ?>
         </span>
 
-        <!-- Botón para ir al perfil -->
         <a href="perfil.php" class="btn btn-outline-light btn-sm me-2">
           Mi perfil
         </a>
 
-        <!-- Botón para cerrar sesión -->
         <a href="logout.php" class="btn btn-outline-light btn-sm">
           Cerrar sesión
         </a>

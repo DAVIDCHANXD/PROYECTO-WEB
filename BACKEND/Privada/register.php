@@ -19,7 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password  = $_POST['password']  ?? '';
     $password2 = $_POST['password2'] ?? '';
 
-    if ($nombre === '' || $email === '' || $password === '' || $password2 === '') {
+    // Nombre completo = nombre + apellido (guardamos todo en la columna nombre)
+    $nombreCompleto = trim($nombre . ' ' . $apellido);
+
+    if ($nombreCompleto === '' || $email === '' || $password === '' || $password2 === '') {
         $errores = 'Por favor llena todos los campos obligatorios.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errores = 'El correo no es válido.';
@@ -36,32 +39,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($stmt->fetchColumn() > 0) {
                 $errores = 'Ya existe una cuenta con ese correo.';
             } else {
-                // Buscar el rol de "adoptante" en la tabla roles (columna nombre)
+                // Buscar el rol de "adoptante" en la tabla roles
                 $stmtRol = $pdo->prepare('SELECT id_rol FROM roles WHERE nombre = :rol');
                 $stmtRol->execute([':rol' => 'adoptante']);
                 $idRol = $stmtRol->fetchColumn();
 
-                // Si no se encuentra, por seguridad definimos un rol por defecto (3, como comentaste)
+                // Si no se encuentra, rol por defecto (por ejemplo 5 = adoptante)
                 if (!$idRol) {
-                    $idRol = 3;
+                    $idRol = 5;
                 }
 
                 // Hashear la contraseña
                 $hash = password_hash($password, PASSWORD_DEFAULT);
 
-                // Insertar usuario nuevo
+                // OJO: ya no usamos 'apellidos', solo las columnas reales
                 $stmtIns = $pdo->prepare('
-                    INSERT INTO usuarios (id_rol, nombre, apellidos, email, password_hash, telefono)
-                    VALUES (:id_rol, :nombre, :apellidos, :email, :password_hash, :telefono)
+                    INSERT INTO usuarios (id_rol, nombre, email, password_hash, telefono)
+                    VALUES (:id_rol, :nombre, :email, :password_hash, :telefono)
                 ');
 
                 $stmtIns->execute([
                     ':id_rol'        => $idRol,
-                    ':nombre'        => $nombre,
-                    ':apellidos'     => $apellido,   // columna apellidos en la BD
+                    ':nombre'        => $nombreCompleto,
                     ':email'         => $email,
                     ':password_hash' => $hash,
-                    ':telefono'      => $telefono,
+                    ':telefono'      => $telefono !== '' ? $telefono : null,
                 ]);
 
                 $exito = 'Tu cuenta se creó correctamente. Ahora puedes iniciar sesión.';
