@@ -39,7 +39,7 @@ $stmtUpdate->bind_param("ssi", $token, $expira, $usuario['id_usuario']);
 $stmtUpdate->execute();
 
 // --- 3. Crear enlace de recuperación ---
-$baseUrl = 'https://TU_DOMINIO_O_IP/reset_password.php'; // AJUSTA
+$baseUrl = 'https://https://grid-href-targets-calibration.trycloudflare.com/reset_password.php'; // AJUSTA
 $link = $baseUrl . '?token=' . urlencode($token);
 
 // --- 4. Enviar correo (o mostrar en pantalla para pruebas) ---
