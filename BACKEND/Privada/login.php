@@ -1,12 +1,13 @@
 <?php
-// login.php
+// BACKEND/Privada/login.php
 session_start();
-require_once __DIR__ . '/BACKEND/DATABASE/conexion.php';
+require_once __DIR__ . '/../DATABASE/conexion.php';
 
 $errores = '';
+$email   = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? '');
+    $email    = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
     if ($email === '' || $password === '') {
@@ -48,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Bootstrap -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="FRONTEND/CSS/styles.css">
+    <link rel="stylesheet" href="../../FRONTEND/CSS/styles.css">
 </head>
 <body class="bg-light">
 
@@ -70,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="mb-3">
                             <label class="form-label">Correo electrónico</label>
                             <input type="email" name="email" class="form-control"
-                                required value="<?php echo htmlspecialchars($email ?? ''); ?>">
+                                   required value="<?php echo htmlspecialchars($email); ?>">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Contraseña</label>
@@ -91,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <a href="forgot_password.php">¿Olvidaste tu contraseña?</a>
                     </p>
                     <p class="text-center mt-2 mb-0">
-                        <a href="/index.html">← Volver al sitio público</a>
+                        <a href="../../index.html">← Volver al sitio público</a>
                     </p>
                 </div>
             </div>
