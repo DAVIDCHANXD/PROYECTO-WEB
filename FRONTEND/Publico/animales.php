@@ -6,21 +6,7 @@ require_once __DIR__ . '/../../BACKEND/DATABASE/conexion.php';
 $animales      = [];
 $errorAnimales = '';
 
-// Mapas para traducir los IDs a texto (según los INSERT que metimos)
-$mapTipos = [
-    1 => 'Perro',
-    2 => 'Gato',
-    3 => 'Otros',
-];
-
-$mapTamanos = [
-    1 => 'Grande',
-    2 => 'Mediano',
-    3 => 'Pequeño',
-];
-
 try {
-    // SOLO tabla animales, nada de JOINs por ahora
     $sql = "
         SELECT 
             id_animal,
@@ -38,9 +24,21 @@ try {
     $stmt     = $pdo->query($sql);
     $animales = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    // Si algo truena, mostramos el mensaje SQL para saber qué pasa
+    // DEJAMOS EL MENSAJE REAL PARA SABER EXACTAMENTE QUÉ FALLA
     $errorAnimales = 'Error al cargar los animales: ' . $e->getMessage();
 }
+
+// Mapas simples para mostrar texto
+$mapTipos = [
+    1 => 'Perro',
+    2 => 'Gato',
+    3 => 'Otros',
+];
+$mapTamanos = [
+    1 => 'Grande',
+    2 => 'Mediano',
+    3 => 'Pequeño',
+];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -55,7 +53,6 @@ try {
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
 
-<?php /* NAVBAR REUTILIZADA */ ?>
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar">
   <div class="container">
     <a class="navbar-brand fw-bold" href="index.php">
@@ -103,7 +100,6 @@ try {
         </div>
       </div>
 
-      <!-- Filtros -->
       <ul class="nav nav-pills small mb-4" id="filtros-animales">
         <li class="nav-item">
           <button class="nav-link active" data-filter="todos" type="button">Todos</button>
@@ -119,7 +115,6 @@ try {
         </li>
       </ul>
 
-      <!-- Lista dinámica de animales -->
       <div id="lista-animales" class="row g-4">
 
         <?php if ($errorAnimales): ?>
@@ -141,17 +136,15 @@ try {
         <?php foreach ($animales as $animal): ?>
           <?php
             $nombre    = $animal['nombre']      ?? 'Sin nombre';
-            $idTipo    = (int)($animal['id_tipo']    ?? 0);
-            $idTamano  = (int)($animal['id_tamano']  ?? 0);
+            $idTipo    = (int)($animal['id_tipo']   ?? 0);
+            $idTamano  = (int)($animal['id_tamano'] ?? 0);
             $edad      = $animal['edad_anios']  ?? '';
             $desc      = $animal['descripcion'] ?? '';
 
-            // Traducir IDs a texto
-            $especieRaw = $mapTipos[$idTipo]    ?? 'Otros';
-            $tamanio    = $mapTamanos[$idTamano]?? '';
+            $especieRaw = $mapTipos[$idTipo]     ?? 'Otros';
+            $tamanio    = $mapTamanos[$idTamano] ?? '';
 
-            // Para filtros
-            $especieLower  = strtolower($especieRaw);
+            $especieLower = strtolower($especieRaw);
             if ($especieLower === 'perro' || $especieLower === 'perros') {
                 $especieFiltro = 'perro';
             } elseif ($especieLower === 'gato' || $especieLower === 'gatos') {
@@ -160,14 +153,12 @@ try {
                 $especieFiltro = 'otros';
             }
 
-            // Subtítulo: "Perro · Mediano · 2 años"
             $partesSub = [];
             if (!empty($especieRaw)) $partesSub[] = $especieRaw;
             if (!empty($tamanio))    $partesSub[] = $tamanio;
             if ($edad !== '' && $edad !== null) $partesSub[] = $edad . ' años';
             $subtitulo = implode(' · ', $partesSub);
 
-            // Por ahora usamos imagen por defecto (luego conectamos fotos_animal)
             $foto = 'https://via.placeholder.com/600x400?text=En+adopcion';
           ?>
 
@@ -215,12 +206,10 @@ try {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// Botón "Actualizar lista"
 function cargarAnimales() {
   location.reload();
 }
 
-// Filtros simples por data-especie
 document.addEventListener('DOMContentLoaded', () => {
   const botones = document.querySelectorAll('#filtros-animales .nav-link');
   const cards   = document.querySelectorAll('#lista-animales [data-especie]');
