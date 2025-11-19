@@ -26,11 +26,28 @@ $nombre = $_SESSION['nombre'] ?? 'Usuario';
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="dashboard.php">Panel AdoptaConAmor</a>
-    <div class="ms-auto">
-      <span class="navbar-text me-3">
-        Hola, <?php echo htmlspecialchars($nombre); ?>
-      </span>
-      <a href="logout.php" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="ms-auto d-flex align-items-center">
+        <span class="navbar-text me-3">
+          Hola, <?php echo htmlspecialchars($nombre); ?>
+        </span>
+
+        <!-- Botón para ir al perfil -->
+        <a href="perfil.php" class="btn btn-outline-light btn-sm me-2">
+          Mi perfil
+        </a>
+
+        <!-- Botón para cerrar sesión -->
+        <a href="logout.php" class="btn btn-outline-light btn-sm">
+          Cerrar sesión
+        </a>
+      </div>
     </div>
   </div>
 </nav>
