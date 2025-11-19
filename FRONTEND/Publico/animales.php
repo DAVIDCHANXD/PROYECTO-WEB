@@ -1,27 +1,31 @@
 <?php
 // FRONTEND/.../animales.php
 
-// Conexión a la base de datos
-// Ojo con la ruta: este archivo está 2 carpetas debajo de la raíz (por eso ../../)
-// ajusta si tu estructura es distinta
 require_once __DIR__ . '/../../BACKEND/DATABASE/conexion.php';
 
-$animales   = [];
+$animales     = [];
 $errorAnimales = '';
 
 try {
-    // Ajusta nombres de tabla y columnas según tu BD
-    $sql = "SELECT 
-                id_animal,
-                nombre,
-                especie,
-                tamanio,
-                edad,
-                descripcion,
-                foto_url,
-                disponible
-            FROM animales
-            WHERE disponible = 1";  // o el campo que uses para marcar que sigue en adopción
+    // Traemos datos de animales + tipo + tamaño + foto principal
+    $sql = "
+        SELECT 
+            a.id_animal,
+            a.nombre,
+            ta.nombre   AS especie,
+            tm.nombre   AS tamanio,
+            a.edad_anios,
+            a.descripcion,
+            f.url       AS foto_url
+        FROM animales a
+        JOIN tipos_animal ta ON a.id_tipo   = ta.id_tipo
+        JOIN tamanos      tm ON a.id_tamano = tm.id_tamano
+        LEFT JOIN fotos_animal f 
+            ON f.id_animal = a.id_animal AND f.es_principal = 1
+        WHERE a.visible = 1
+          AND a.adoptado = 0
+        ORDER BY a.fecha_registro DESC
+    ";
 
     $stmt = $pdo->query($sql);
     $animales = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -127,33 +131,36 @@ try {
 
         <?php foreach ($animales as $animal): ?>
           <?php
-            // Normalizamos algunos campos
-            $nombre     = $animal['nombre']      ?? 'Sin nombre';
-            $especieRaw = $animal['especie']     ?? 'otros';
-            $especie    = strtolower($especieRaw);
-            if (!in_array($especie, ['perro', 'gato'])) {
-                $especie = 'otros';
-            }
-
-            $tamanio  = $animal['tamanio']  ?? '';
-            $edad     = $animal['edad']     ?? '';
-            $desc     = $animal['descripcion'] ?? '';
-            $foto     = $animal['foto_url'] ?? '';
+            $nombre      = $animal['nombre']        ?? 'Sin nombre';
+            $especieRaw  = $animal['especie']       ?? 'Otros';   // viene de tipos_animal.nombre
+            $tamanio     = $animal['tamanio']       ?? '';        // viene de tamanos.nombre
+            $edad        = $animal['edad_anios']    ?? '';
+            $desc        = $animal['descripcion']   ?? '';
+            $foto        = $animal['foto_url']      ?? '';
 
             if (empty($foto)) {
-                // Imagen por defecto si no hay foto
                 $foto = 'https://via.placeholder.com/600x400?text=En+adopcion';
+            }
+
+            // Para los filtros: solo perro / gato / otros
+            $especieLower = strtolower($especieRaw);
+            if ($especieLower === 'perro' || $especieLower === 'perros') {
+                $especieFiltro = 'perro';
+            } elseif ($especieLower === 'gato' || $especieLower === 'gatos') {
+                $especieFiltro = 'gato';
+            } else {
+                $especieFiltro = 'otros';
             }
 
             // Subtítulo tipo: "Perro · Mediano · 2 años"
             $partesSub = [];
             if (!empty($especieRaw)) $partesSub[] = $especieRaw;
-            if (!empty($tamanio))   $partesSub[] = $tamanio;
-            if ($edad !== '')       $partesSub[] = $edad . ' años';
+            if (!empty($tamanio))    $partesSub[] = $tamanio;
+            if ($edad !== '' && $edad !== null) $partesSub[] = $edad . ' años';
             $subtitulo = implode(' · ', $partesSub);
           ?>
 
-          <div class="col-md-4" data-especie="<?php echo htmlspecialchars($especie); ?>">
+          <div class="col-md-4" data-especie="<?php echo htmlspecialchars($especieFiltro); ?>">
             <div class="card h-100 shadow-sm border-0 animal-card">
               <img src="<?php echo htmlspecialchars($foto); ?>"
                    class="card-img-top"
