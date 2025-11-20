@@ -68,7 +68,7 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
           Hola, <?php echo htmlspecialchars($nombre); ?>
         </span>
 
-        <a href="perfil.php" class="btn btn-outline-light btn-sm me-2">
+        <a href="/BACKEND/Privada/perfil.php" class="btn btn-outline-light btn-sm me-2">
           Mi perfil
         </a>
 
