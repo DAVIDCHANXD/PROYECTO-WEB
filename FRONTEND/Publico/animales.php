@@ -83,7 +83,6 @@ $mapTamanos = [
 </nav>
 
 <main class="flex-grow-1">
-
   <section class="py-5">
     <div class="container">
       <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
