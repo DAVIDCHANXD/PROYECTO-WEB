@@ -103,7 +103,7 @@ $mapTamanos = [
         </li>
       </ul>
 
-      <div id="lista-animales" class="row g-4">
+      <div id="lista-animales" class="row g-4"></div>
 
         <!-- Mensaje de error -->
         <?php if ($errorAnimales): ?>
