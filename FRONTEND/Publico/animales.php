@@ -6,27 +6,17 @@ require_once __DIR__ . '/../../BACKEND/DATABASE/conexion.php';
 $animales      = [];
 $errorAnimales = '';
 
-try {
-    $sql = "
-        SELECT 
-            id_animal,
-            nombre,
-            id_tipo,
-            id_tamano,
-            edad_anios,
-            descripcion
-        FROM animales
-        WHERE visible = 1
-          AND adoptado = 0
-        ORDER BY fecha_registro DESC
-    ";
-
-    $stmt     = $pdo->query($sql);
-    $animales = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    // DEJAMOS EL MENSAJE REAL PARA SABER EXACTAMENTE QUÉ FALLA
-    $errorAnimales = 'Error al cargar los animales: ' . $e->getMessage();
-}
+$sql = "
+    SELECT 
+        id_animal,
+        nombre,
+        id_tipo,
+        id_tamano,
+        edad_anios,
+        descripcion
+    FROM animales
+    WHERE visible = 1
+";
 
 // Mapas simples para mostrar texto
 $mapTipos = [
