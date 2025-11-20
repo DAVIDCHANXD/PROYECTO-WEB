@@ -1,0 +1,130 @@
+/* ================================
+   FONDO GENERAL
+=================================*/
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0f0f0f, #1a1a1a, #ff8c42);
+    background-size: cover;
+    background-attachment: fixed;
+    color: #fff;
+}
+
+/* ================================
+   NAVBAR
+=================================*/
+.glass-nav {
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.navbar-brand {
+    color: #ff8c42 !important;
+}
+
+.nav-link {
+    color: #ffffff !important;
+    transition: 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #ff8c42 !important;
+}
+
+/* ================================
+   TARJETAS DE ANIMALES
+=================================*/
+.animal-card {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 15px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.3s;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.animal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+}
+
+.animal-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 18px;
+}
+
+/* ================================
+   BOTONES
+=================================*/
+.btn-adoptar {
+    background-color: #4274ff;
+    border: none;
+    color: #000;
+    font-weight: 600;
+    width: 100%;
+    border-radius: 12px;
+    padding: 10px;
+    transition: 0.3s;
+}
+
+.btn-adoptar:hover {
+    background-color: #5f82ff;
+}
+
+/* ================================
+   TITULOS
+=================================*/
+.page-title {
+    color: #426eff;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* ================================
+   BUSCADOR
+=================================*/
+.search-box input {
+    border-radius: 12px;
+    border: none;
+    padding: 12px 18px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    color: white;
+}
+
+.search-box input::placeholder {
+    color: #ccc;
+}
+
+/* ================================
+   MODAL
+=================================*/
+.modal-content {
+    background: rgba(0,0,0,0.75);
+    border-radius: 20px;
+    color: white;
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.modal-footer button {
+    border-radius: 12px;
+}
+
+/* ================================
+   FOOTER
+=================================*/
+footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    color: #ccc;
+}

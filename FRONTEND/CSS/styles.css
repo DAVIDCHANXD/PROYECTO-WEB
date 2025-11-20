@@ -1,27 +1,47 @@
-body {
-    /* solo para que se vea mejor centrado en pantallas grandes */
+/* Fondo elegante */
+.login-bg {
+    background: linear-gradient(135deg, #e9f0ff, #f7faff);
     min-height: 100vh;
+    display: flex;
+    align-items: center;
 }
 
-#item-form {
-    background-color: #111827;
-    border-radius: 0.75rem;
-    padding: 1rem 1.25rem;
-    border: 1px solid #1f2937;
+/* Tarjeta glass */
+.glass-card {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(14px);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
 }
 
-#empty-msg {
-    font-size: 0.9rem;
+/* Inputs suaves */
+.input-soft {
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid #d3d3d3;
+    transition: 0.2s;
 }
 
-/* Opcional: detalles pequeños sobre Bootstrap, sin romper nada */
-
-.card-img-top {
-    object-fit: cover;
-    height: 220px;
+.input-soft:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.15rem rgba(13,110,253,0.25);
 }
 
-.card:hover {
-    transform: translateY(-3px);
-    transition: transform 0.2s ease;
+/* Botón mejorado */
+.soft-btn {
+    border-radius: 12px !important;
+    padding: 12px;
+    font-weight: 600;
+    box-shadow: 0 4px 18px rgba(13, 110, 253, 0.25);
+}
+
+/* Links */
+a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }

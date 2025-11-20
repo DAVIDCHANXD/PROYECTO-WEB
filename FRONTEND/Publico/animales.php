@@ -36,7 +36,6 @@ try {
     $errorAnimales = 'Error al cargar los animales: ' . $e->getMessage();
 }
 
-// Mapas simples para mostrar texto
 $mapTipos = [
     1 => 'Perro',
     2 => 'Gato',
@@ -57,7 +56,12 @@ $mapTamanos = [
 
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+    <!-- Tu CSS general -->
     <link rel="stylesheet" href="/FRONTEND/CSS/index.css" />
+
+    <!-- Nuevo CSS solo para animales (visual) -->
+    <link rel="stylesheet" href="/FRONTEND/CSS/animales.css" />
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
 
@@ -86,7 +90,8 @@ $mapTamanos = [
   </div>
 </nav>
 
-<main class="flex-grow-1">
+<main class="flex-grow-1 animales-bg">
+
   <section class="py-5">
     <div class="container">
       <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
@@ -107,7 +112,7 @@ $mapTamanos = [
         </div>
       </div>
 
-      <ul class="nav nav-pills small mb-4" id="filtros-animales">
+      <ul class="nav nav-pills small mb-4 filtros-animales-ui" id="filtros-animales">
         <li class="nav-item">
           <button class="nav-link active" data-filter="todos" type="button">Todos</button>
         </li>
@@ -122,19 +127,19 @@ $mapTamanos = [
         </li>
       </ul>
 
-      <div id="lista-animales" class="row g-4">
+      <div id="lista-animales" class="row g-4 animales-grid">
 
         <?php if ($errorAnimales): ?>
           <div class="col-12">
-            <div class="alert alert-danger">
-              <?php echo htmlspecialchars($errorAnimales); ?>
+            <div class="alert alert-danger glass-alert">
+              <?= htmlspecialchars($errorAnimales); ?>
             </div>
           </div>
         <?php endif; ?>
 
         <?php if (!$errorAnimales && empty($animales)): ?>
           <div class="col-12">
-            <div class="alert alert-info">
+            <div class="alert alert-info glass-alert">
               Por ahora no hay animales disponibles en adopción.
             </div>
           </div>
@@ -142,68 +147,47 @@ $mapTamanos = [
 
         <?php foreach ($animales as $animal): ?>
           <?php
-            $nombre    = $animal['nombre']      ?? 'Sin nombre';
-            $idTipo    = (int)($animal['id_tipo']   ?? 0);
+            $nombre    = $animal['nombre'] ?? 'Sin nombre';
+            $idTipo    = (int)($animal['id_tipo'] ?? 0);
             $idTamano  = (int)($animal['id_tamano'] ?? 0);
-            $edad      = $animal['edad_anios']  ?? '';
+            $edad      = $animal['edad_anios'] ?? '';
             $desc      = $animal['descripcion'] ?? '';
 
-            $especieRaw = $mapTipos[$idTipo]     ?? 'Otros';
+            $especieRaw = $mapTipos[$idTipo] ?? 'Otros';
             $tamanio    = $mapTamanos[$idTamano] ?? '';
 
             $especieLower = strtolower($especieRaw);
-            if ($especieLower === 'perro' || $especieLower === 'perros') {
-                $especieFiltro = 'perro';
-            } elseif ($especieLower === 'gato' || $especieLower === 'gatos') {
-                $especieFiltro = 'gato';
-            } else {
-                $especieFiltro = 'otros';
-            }
+            if ($especieLower === 'perro') $especieFiltro = 'perro';
+            elseif ($especieLower === 'gato') $especieFiltro = 'gato';
+            else $especieFiltro = 'otros';
 
             $partesSub = [];
-            if (!empty($especieRaw)) $partesSub[] = $especieRaw;
-            if (!empty($tamanio))    $partesSub[] = $tamanio;
+            if ($especieRaw) $partesSub[] = $especieRaw;
+            if ($tamanio)    $partesSub[] = $tamanio;
             if ($edad !== '' && $edad !== null) $partesSub[] = $edad . ' años';
             $subtitulo = implode(' · ', $partesSub);
 
-            // ==========================
-            // FOTO DEL ANIMAL DESDE BD
-            // ==========================
             $fotoUrl = $animal['foto_url'] ?? '';
-
-            if (empty($fotoUrl)) {
-                // Si no hay foto en BD, placeholder
-                $foto = 'https://via.placeholder.com/600x400?text=En+adopcion';
-            } else {
-                $foto = $fotoUrl;
-
-                // Si no empieza con http/https, asumimos ruta local (ej. /uploads/animales/luna1.jpg)
-                if (!preg_match('~^https?://~i', $foto)) {
-                    $foto = '/' . ltrim($foto, '/');
-                }
-            }
+            $foto = empty($fotoUrl)
+                ? 'https://via.placeholder.com/600x400?text=En+adopcion'
+                : (preg_match('~^https?://~i', $fotoUrl) ? $fotoUrl : '/' . ltrim($fotoUrl, '/'));
           ?>
 
-          <div class="col-md-4" data-especie="<?php echo htmlspecialchars($especieFiltro); ?>">
-            <div class="card h-100 shadow-sm border-0 animal-card">
-              <img src="<?php echo htmlspecialchars($foto); ?>"
-                   class="card-img-top"
-                   alt="Foto de <?php echo htmlspecialchars($nombre); ?>">
+          <div class="col-md-4" data-especie="<?= htmlspecialchars($especieFiltro); ?>">
+            <div class="card h-100 border-0 shadow-sm animal-card glass-card">
+              <img src="<?= htmlspecialchars($foto); ?>"
+                   class="card-img-top animal-img"
+                   alt="Foto de <?= htmlspecialchars($nombre); ?>">
+
               <div class="card-body">
-                <h5 class="card-title mb-1">
-                  <?php echo htmlspecialchars($nombre); ?>
-                </h5>
+                <h5 class="card-title mb-1"><?= htmlspecialchars($nombre); ?></h5>
 
                 <?php if ($subtitulo): ?>
-                  <p class="text-muted small mb-2">
-                    <?php echo htmlspecialchars($subtitulo); ?>
-                  </p>
+                  <p class="text-muted small mb-2"><?= htmlspecialchars($subtitulo); ?></p>
                 <?php endif; ?>
 
                 <?php if (!empty($desc)): ?>
-                  <p class="card-text small">
-                    <?php echo nl2br(htmlspecialchars($desc)); ?>
-                  </p>
+                  <p class="card-text small"><?= nl2br(htmlspecialchars($desc)); ?></p>
                 <?php endif; ?>
 
                 <button class="btn btn-outline-primary btn-sm">
@@ -212,6 +196,7 @@ $mapTamanos = [
               </div>
             </div>
           </div>
+
         <?php endforeach; ?>
 
       </div>
@@ -222,14 +207,13 @@ $mapTamanos = [
 
 <footer class="text-white text-center py-3 mt-auto site-footer">
   <div class="container">
-    <small>&copy; <?php echo date('Y'); ?> AdoptaConAmor · Proyecto final</small>
+    <small>&copy; <?= date('Y'); ?> AdoptaConAmor · Proyecto final</small>
   </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-// Solo filtros, nada de fetch
 document.addEventListener('DOMContentLoaded', () => {
   const botones = document.querySelectorAll('#filtros-animales .nav-link');
   const cards   = document.querySelectorAll('#lista-animales [data-especie]');
