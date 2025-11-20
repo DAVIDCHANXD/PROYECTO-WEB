@@ -1,16 +1,34 @@
 <?php
 // FRONTEND/Publico/animales.php
 
-require_once __DIR__ . '/../../BACKEND/Privada/get_animales.php';
+require_once __DIR__ . '/../../BACKEND/DATABASE/conexion.php';
 
 $animales      = [];
 $errorAnimales = '';
 
 try {
-    // Llamamos a la función del backend que consulta la BD
-    $animales = obtener_animales();
-} catch (Throwable $e) {
-    // Aquí ya te debería decir EXACTAMENTE qué falla
+    $sql = "
+        SELECT 
+            id_animal,
+            nombre,
+            id_tipo,
+            id_tamano,
+            edad_anios,
+            sexo,
+            id_estado_salud,
+            descripcion,
+            fecha_registro,
+            adoptado,
+            visible
+        FROM animales
+        WHERE visible = 1
+          AND adoptado = 0
+        ORDER BY fecha_registro DESC
+    ";
+
+    $stmt     = $pdo->query($sql);
+    $animales = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
     $errorAnimales = 'Error al cargar los animales: ' . $e->getMessage();
 }
 
@@ -39,7 +57,6 @@ $mapTamanos = [
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
 
-<!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar">
   <div class="container">
     <a class="navbar-brand fw-bold" href="../../index.html">
@@ -78,7 +95,7 @@ $mapTamanos = [
         </div>
 
         <div class="d-flex flex-wrap gap-2">
-          <button class="btn btn-outline-secondary btn-sm" onclick="cargarAnimales()">
+          <button class="btn btn-outline-secondary btn-sm" onclick="location.reload()">
             Actualizar lista
           </button>
           <a href="/BACKEND/Privada/login.php" class="btn btn-primary btn-sm">
@@ -87,7 +104,6 @@ $mapTamanos = [
         </div>
       </div>
 
-      <!-- Filtros -->
       <ul class="nav nav-pills small mb-4" id="filtros-animales">
         <li class="nav-item">
           <button class="nav-link active" data-filter="todos" type="button">Todos</button>
@@ -103,9 +119,8 @@ $mapTamanos = [
         </li>
       </ul>
 
-      <div id="lista-animales" class="row g-4"></div>
+      <div id="lista-animales" class="row g-4">
 
-        <!-- Mensaje de error -->
         <?php if ($errorAnimales): ?>
           <div class="col-12">
             <div class="alert alert-danger">
@@ -114,7 +129,6 @@ $mapTamanos = [
           </div>
         <?php endif; ?>
 
-        <!-- Mensaje si no hay animales -->
         <?php if (!$errorAnimales && empty($animales)): ?>
           <div class="col-12">
             <div class="alert alert-info">
@@ -123,14 +137,13 @@ $mapTamanos = [
           </div>
         <?php endif; ?>
 
-        <!-- Tarjetas de animales -->
         <?php foreach ($animales as $animal): ?>
           <?php
-            $nombre    = $animal['nombre']        ?? 'Sin nombre';
+            $nombre    = $animal['nombre']      ?? 'Sin nombre';
             $idTipo    = (int)($animal['id_tipo']   ?? 0);
             $idTamano  = (int)($animal['id_tamano'] ?? 0);
-            $edad      = $animal['edad_mostrar']   ?? '';
-            $desc      = $animal['descripcion']    ?? '';
+            $edad      = $animal['edad_anios']  ?? '';
+            $desc      = $animal['descripcion'] ?? '';
 
             $especieRaw = $mapTipos[$idTipo]     ?? 'Otros';
             $tamanio    = $mapTamanos[$idTamano] ?? '';
@@ -150,15 +163,14 @@ $mapTamanos = [
             if ($edad !== '' && $edad !== null) $partesSub[] = $edad . ' años';
             $subtitulo = implode(' · ', $partesSub);
 
-            // De momento foto genérica
             $foto = 'https://via.placeholder.com/600x400?text=En+adopcion';
           ?>
 
           <div class="col-md-4" data-especie="<?php echo htmlspecialchars($especieFiltro); ?>">
             <div class="card h-100 shadow-sm border-0 animal-card">
               <img src="<?php echo htmlspecialchars($foto); ?>"
-                   class="card-img-top"
-                   alt="Foto de <?php echo htmlspecialchars($nombre); ?>">
+                  class="card-img-top"
+                  alt="Foto de <?php echo htmlspecialchars($nombre); ?>">
               <div class="card-body">
                 <h5 class="card-title mb-1">
                   <?php echo htmlspecialchars($nombre); ?>
@@ -197,11 +209,9 @@ $mapTamanos = [
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-function cargarAnimales() {
-  location.reload();
-}
 
+<script>
+// Solo filtros, nada de fetch
 document.addEventListener('DOMContentLoaded', () => {
   const botones = document.querySelectorAll('#filtros-animales .nav-link');
   const cards   = document.querySelectorAll('#lista-animales [data-especie]');
@@ -226,6 +236,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
+
+<!-- IMPORTANTE: NO CARGAR app.js AQUÍ -->
+<!-- <script src="/FRONTEND/JS/app.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/FRONTEND/JS/app.js"></script>
+
+
 </body>
 </html>
