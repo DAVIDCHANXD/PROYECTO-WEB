@@ -239,9 +239,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- IMPORTANTE: NO CARGAR app.js AQUÍ -->
 <!-- <script src="/FRONTEND/JS/app.js"></script> -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/FRONTEND/JS/app.js"></script>
-
 
 </body>
 </html>
