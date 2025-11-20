@@ -1,5 +1,9 @@
 <?php
-// FRONTEND/.../animales.php
+// FRONTEND/Publico/animales.php
+
+// MODO DEBUG (luego lo puedes quitar si quieres)
+ini_set('display_errors', '1');
+error_reporting(E_ALL);
 
 require_once __DIR__ . '/../../BACKEND/DATABASE/conexion.php';
 
@@ -7,13 +11,41 @@ $animales      = [];
 $errorAnimales = '';
 
 try {
-    // CONSULTA SIMPLIFICADA PARA EVITAR ERRORES DE COLUMNAS QUE NO EXISTEN
-    $sql = "SELECT * FROM animales ORDER BY id_animal DESC";
+    // 1) Verificamos que exista la conexión PDO
+    if (!isset($pdo)) {
+        throw new Exception('No existe la conexión PDO ($pdo). Revisa BACKEND/DATABASE/conexion.php');
+    }
 
-    $stmt     = $pdo->query($sql);
+    // 2) Verificamos que la tabla "animales" exista en la BD
+    $check = $pdo->query("SHOW TABLES LIKE 'animales'");
+    if ($check->rowCount() === 0) {
+        throw new Exception("La tabla 'animales' no existe en la base de datos. Crea la tabla o revisa el nombre.");
+    }
+
+    // 3) Consulta PRINCIPAL
+    //    - Tomamos id_animal, nombre, id_tipo, id_tamano, descripcion
+    //    - La edad la intentamos leer de edad_anios o de edad (según exista en tu tabla)
+    $sql = "
+        SELECT
+            id_animal,
+            nombre,
+            id_tipo,
+            id_tamano,
+            COALESCE(edad_anios, edad) AS edad_mostrar,
+            descripcion
+        FROM animales
+        ORDER BY id_animal DESC
+    ";
+
+    $stmt     = $pdo->prepare($sql);
+    $stmt->execute();
     $animales = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 } catch (PDOException $e) {
-    // MOSTRAR EL ERROR REAL PARA SABER QUÉ PASA
+    // Error de MariaDB / PDO
+    $errorAnimales = 'Error de base de datos al cargar los animales: ' . $e->getMessage();
+} catch (Exception $e) {
+    // Cualquier otro error (tabla inexistente, sin conexión, etc.)
     $errorAnimales = 'Error al cargar los animales: ' . $e->getMessage();
 }
 
@@ -127,9 +159,8 @@ $mapTamanos = [
             $nombre    = $animal['nombre']        ?? 'Sin nombre';
             $idTipo    = (int)($animal['id_tipo']   ?? 0);
             $idTamano  = (int)($animal['id_tamano'] ?? 0);
-            // si no existe edad_anios en la BD, no truena, solo queda vacío
-            $edad      = $animal['edad_anios']    ?? ($animal['edad'] ?? '');
-            $desc      = $animal['descripcion']   ?? '';
+            $edad      = $animal['edad_mostrar']   ?? '';
+            $desc      = $animal['descripcion']    ?? '';
 
             $especieRaw = $mapTipos[$idTipo]     ?? 'Otros';
             $tamanio    = $mapTamanos[$idTamano] ?? '';
