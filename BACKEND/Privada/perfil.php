@@ -11,8 +11,8 @@ if (!isset($_SESSION['id_usuario'])) {
 // 2. Conexión a la base de datos
 require_once __DIR__ . '/../DATABASE/conexion.php';
 
-$idUsuario     = $_SESSION['id_usuario'];
-$mensajeError  = '';
+$idUsuario    = $_SESSION['id_usuario'];
+$mensajeError = '';
 
 // 3. Si viene por POST, procesamos actualización
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -23,19 +23,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($nombre === '' || $email === '') {
         $mensajeError = 'El nombre y el correo son obligatorios.';
     } else {
-        $sql = 'UPDATE usuarios 
-                SET nombre = :nombre,
-                    email = :email,
-                    telefono = :telefono
-                WHERE id_usuario = :id';
+        try {
+            $sql = 'UPDATE usuarios 
+                    SET nombre = :nombre,
+                        email = :email,
+                        telefono = :telefono
+                    WHERE id_usuario = :id';
 
-        $stmt = $pdo->prepare($sql);
-        $ok = $stmt->execute([
-            ':nombre'   => $nombre,
-            ':email'    => $email,
-            ':telefono' => $telefono !== '' ? $telefono : null,
-            ':id'       => $idUsuario
-        ]);
+            $stmt = $pdo->prepare($sql);
+            $ok = $stmt->execute([
+                ':nombre'   => $nombre,
+                ':email'    => $email,
+                ':telefono' => $telefono !== '' ? $telefono : null,
+                ':id'       => $idUsuario
+            ]);
+        } catch (PDOException $e) {
+            $ok = false;
+            // Si quieres ver el error exacto mientras desarrollas, descomenta la línea de abajo:
+            // $mensajeError = 'Error al guardar: ' . $e->getMessage();
+            $mensajeError = 'Ocurrió un error al guardar los cambios.';
+        }
 
         if ($ok) {
             // actualizamos el nombre de la sesión para el navbar / dashboard
@@ -44,20 +51,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Redirigimos al dashboard con un indicador de "perfil actualizado"
             header('Location: dashboard.php?perfil=1');
             exit;
-        } else {
-            $mensajeError = 'Ocurrió un error al guardar los cambios.';
         }
     }
 }
 
 // 4. Obtener datos actuales del usuario para mostrarlos en el formulario
-$sqlDatos = 'SELECT nombre, email, telefono 
-             FROM usuarios 
-             WHERE id_usuario = :id';
+try {
+    $sqlDatos = 'SELECT nombre, email, telefono 
+                 FROM usuarios 
+                 WHERE id_usuario = :id';
 
-$stmtDatos = $pdo->prepare($sqlDatos);
-$stmtDatos->execute([':id' => $idUsuario]);
-$usuario = $stmtDatos->fetch(PDO::FETCH_ASSOC);
+    $stmtDatos = $pdo->prepare($sqlDatos);
+    $stmtDatos->execute([':id' => $idUsuario]);
+    $usuario = $stmtDatos->fetch(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $usuario = false;
+    $mensajeError = 'Ocurrió un error al cargar tus datos.';
+    // Si quieres ver el error exacto:
+    // $mensajeError = 'Error al cargar datos: ' . $e->getMessage();
+}
 
 // Si por algún motivo no encuentra el usuario, cerramos sesión
 if (!$usuario) {
@@ -66,8 +78,9 @@ if (!$usuario) {
     exit;
 }
 
-// Para el "avatar", tomamos la primera letra del nombre
-$inicial = mb_strtoupper(mb_substr($usuario['nombre'] ?? 'U', 0, 1, 'UTF-8'), 'UTF-8');
+// Para el "avatar", tomamos la primera letra del nombre (sin mb_*)
+$nombreUsuario = $usuario['nombre'] ?? 'Usuario';
+$inicial       = strtoupper(substr($nombreUsuario, 0, 1));
 ?>
 <!DOCTYPE html>
 <html lang="es">
