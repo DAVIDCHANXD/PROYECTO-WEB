@@ -9,21 +9,25 @@ $errorAnimales = '';
 try {
     $sql = "
         SELECT 
-            id_animal,
-            nombre,
-            id_tipo,
-            id_tamano,
-            edad_anios,
-            sexo,
-            id_estado_salud,
-            descripcion,
-            fecha_registro,
-            adoptado,
-            visible
-        FROM animales
-        WHERE visible = 1
-          AND adoptado = 0
-        ORDER BY fecha_registro DESC
+            a.id_animal,
+            a.nombre,
+            a.id_tipo,
+            a.id_tamano,
+            a.edad_anios,
+            a.sexo,
+            a.id_estado_salud,
+            a.descripcion,
+            a.fecha_registro,
+            a.adoptado,
+            a.visible,
+            f.url AS foto_url
+        FROM animales AS a
+        LEFT JOIN fotos_animal AS f
+               ON f.id_animal = a.id_animal
+              AND f.es_principal = 1
+        WHERE a.visible = 1
+          AND a.adoptado = 0
+        ORDER BY a.fecha_registro DESC
     ";
 
     $stmt     = $pdo->query($sql);
@@ -162,14 +166,29 @@ $mapTamanos = [
             if ($edad !== '' && $edad !== null) $partesSub[] = $edad . ' años';
             $subtitulo = implode(' · ', $partesSub);
 
-            $foto = 'https://via.placeholder.com/600x400?text=En+adopcion';
+            // ==========================
+            // FOTO DEL ANIMAL DESDE BD
+            // ==========================
+            $fotoUrl = $animal['foto_url'] ?? '';
+
+            if (empty($fotoUrl)) {
+                // Si no hay foto en BD, placeholder
+                $foto = 'https://via.placeholder.com/600x400?text=En+adopcion';
+            } else {
+                $foto = $fotoUrl;
+
+                // Si no empieza con http/https, asumimos ruta local (ej. /uploads/animales/luna1.jpg)
+                if (!preg_match('~^https?://~i', $foto)) {
+                    $foto = '/' . ltrim($foto, '/');
+                }
+            }
           ?>
 
           <div class="col-md-4" data-especie="<?php echo htmlspecialchars($especieFiltro); ?>">
             <div class="card h-100 shadow-sm border-0 animal-card">
               <img src="<?php echo htmlspecialchars($foto); ?>"
-                  class="card-img-top"
-                  alt="Foto de <?php echo htmlspecialchars($nombre); ?>">
+                   class="card-img-top"
+                   alt="Foto de <?php echo htmlspecialchars($nombre); ?>">
               <div class="card-body">
                 <h5 class="card-title mb-1">
                   <?php echo htmlspecialchars($nombre); ?>
@@ -235,9 +254,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
-
-<!-- IMPORTANTE: NO CARGAR app.js AQUÍ -->
-<!-- <script src="/FRONTEND/JS/app.js"></script> -->
 
 </body>
 </html>
