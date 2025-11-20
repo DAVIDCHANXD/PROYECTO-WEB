@@ -6,17 +6,16 @@ require_once __DIR__ . '/../../BACKEND/DATABASE/conexion.php';
 $animales      = [];
 $errorAnimales = '';
 
-$sql = "
-    SELECT 
-        id_animal,
-        nombre,
-        id_tipo,
-        id_tamano,
-        edad_anios,
-        descripcion
-    FROM animales
-    WHERE visible = 1
-";
+try {
+    // CONSULTA SIMPLIFICADA PARA EVITAR ERRORES DE COLUMNAS QUE NO EXISTEN
+    $sql = "SELECT * FROM animales ORDER BY id_animal DESC";
+
+    $stmt     = $pdo->query($sql);
+    $animales = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    // MOSTRAR EL ERROR REAL PARA SABER QUÉ PASA
+    $errorAnimales = 'Error al cargar los animales: ' . $e->getMessage();
+}
 
 // Mapas simples para mostrar texto
 $mapTipos = [
@@ -125,11 +124,12 @@ $mapTamanos = [
 
         <?php foreach ($animales as $animal): ?>
           <?php
-            $nombre    = $animal['nombre']      ?? 'Sin nombre';
+            $nombre    = $animal['nombre']        ?? 'Sin nombre';
             $idTipo    = (int)($animal['id_tipo']   ?? 0);
             $idTamano  = (int)($animal['id_tamano'] ?? 0);
-            $edad      = $animal['edad_anios']  ?? '';
-            $desc      = $animal['descripcion'] ?? '';
+            // si no existe edad_anios en la BD, no truena, solo queda vacío
+            $edad      = $animal['edad_anios']    ?? ($animal['edad'] ?? '');
+            $desc      = $animal['descripcion']   ?? '';
 
             $especieRaw = $mapTipos[$idTipo]     ?? 'Otros';
             $tamanio    = $mapTamanos[$idTamano] ?? '';
