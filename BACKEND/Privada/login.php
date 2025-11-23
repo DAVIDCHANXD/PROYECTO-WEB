@@ -52,15 +52,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Iniciar sesión - AdoptaConAmor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<!-- Bootstrap -->
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 
-    <!-- Tus estilos -->
-    <link rel="stylesheet" href="/FRONTEND/CSS/index.css">
+<!-- Tema general -->
+<link rel="stylesheet" href="/FRONTEND/CSS/index.css">
+
+<!-- Estilos página de autenticación (login / registro) -->
+<link rel="stylesheet" href="/FRONTEND/CSS/auth.css">
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100 auth-bg">
 
 <!-- NAVBAR igual al INDEX -->
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar">

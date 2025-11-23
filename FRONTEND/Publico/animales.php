@@ -92,7 +92,7 @@ $mapTamanos = [
 
 <main class="flex-grow-1 animales-bg">
 
-  <section class="py-5">
+  <section class="py-5 animales-hero">
     <div class="container">
       <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
@@ -176,8 +176,8 @@ $mapTamanos = [
           <div class="col-md-4" data-especie="<?= htmlspecialchars($especieFiltro); ?>">
             <div class="card h-100 border-0 shadow-sm animal-card glass-card">
               <img src="<?= htmlspecialchars($foto); ?>"
-                   class="card-img-top animal-img"
-                   alt="Foto de <?= htmlspecialchars($nombre); ?>">
+                  class="card-img-top animal-img"
+                  alt="Foto de <?= htmlspecialchars($nombre); ?>">
 
               <div class="card-body">
                 <h5 class="card-title mb-1"><?= htmlspecialchars($nombre); ?></h5>

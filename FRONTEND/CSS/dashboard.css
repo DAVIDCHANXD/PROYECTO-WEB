@@ -1,0 +1,143 @@
+/* ======== Fondo general del panel (más claro) ======== */
+.dashboard-bg {
+  background:
+    radial-gradient(circle at top left, rgba(249, 115, 22, 0.18), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(251, 113, 133, 0.20), transparent 55%),
+    #0f172a; /* antes #020617 */
+  color: #e5e7eb;
+}
+
+/* Navbar del panel */
+.dashboard-navbar {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.dashboard-navbar .navbar-brand {
+  font-size: 1rem;
+}
+
+/* Contenedor principal del dashboard */
+.dashboard-bg .container {
+  color: #e5e7eb;
+}
+
+/* ======== Card de bienvenida (header) ======== */
+.dashboard-header-card {
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, #1f2937, #0f172a); /* más claro */
+  color: #f9fafb;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-header-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.65);
+}
+
+.dashboard-header-card h1,
+.dashboard-header-card p,
+.dashboard-header-card .small {
+  color: #e5e7eb !important;
+}
+
+/* ======== Tarjetas de resumen (stats) ======== */
+.dashboard-stat-card {
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, #111827, #020617); /* ya no tan negro plano */
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.6);
+  color: #e5e7eb;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.dashboard-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.85);
+  border-color: rgba(249, 115, 22, 0.7);
+}
+
+.dashboard-stat-card .card-title {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #cbd5f5;
+}
+
+.dashboard-stat-card .display-6 {
+  color: var(--ac-primary);
+  line-height: 1;
+}
+
+.dashboard-stat-card small.text-muted {
+  color: #9ca3af !important;
+}
+
+/* Iconitos redondos de los stats */
+.dashboard-stat-card .rounded-circle {
+  background: radial-gradient(circle at 30% 20%, #1f2937, #020617);
+  border: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+/* ======== Cards de secciones del panel ======== */
+.dashboard-section-card {
+  border-radius: 1.25rem;
+  background: #111827; /* más claro que #0b1120 */
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.55);
+  color: #e5e7eb;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.dashboard-section-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 38px rgba(15, 23, 42, 0.8);
+  border-color: rgba(251, 113, 133, 0.7);
+}
+
+.dashboard-section-card .card-title {
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.dashboard-section-card .card-text {
+  font-size: 0.95rem;
+  color: #d1d5db;
+}
+
+/* Badge y botón dentro de las secciones */
+.dashboard-section-card .badge.bg-secondary {
+  background: rgba(148, 163, 184, 0.35) !important;
+  color: #e5e7eb;
+}
+
+.dashboard-section-card .btn.btn-primary.btn-sm {
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--ac-primary), var(--ac-accent));
+  border-color: transparent;
+  box-shadow: 0 10px 22px rgba(248, 113, 113, 0.6);
+}
+
+.dashboard-section-card .btn.btn-primary.btn-sm.disabled,
+.dashboard-section-card .btn.btn-primary.btn-sm:disabled {
+  opacity: 0.75;
+}
+
+/* ======== Alertas y textos ======== */
+.dashboard-bg .alert {
+  border-radius: 0.75rem;
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+/* Fecha y badges del header */
+.dashboard-header-card .badge.bg-success {
+  background: rgba(34, 197, 94, 0.15) !important;
+  color: #bbf7d0;
+  border: 1px solid rgba(34, 197, 94, 0.5);
+}
+
+.dashboard-header-card .small.text-muted {
+  color: #9ca3af !important;
+}
+ 

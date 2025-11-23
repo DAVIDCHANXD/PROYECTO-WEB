@@ -8,6 +8,7 @@
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/FRONTEND/CSS/index.css" />
+    <link rel="stylesheet" href="/FRONTEND/CSS/contacto.css" />    
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
 
@@ -36,8 +37,8 @@
   </div>
 </nav>
 
-<main class="flex-grow-1">
-  <section class="py-5">
+<main class="flex-grow-1 contacto-bg">
+<section class="py-5 contacto-hero">
     <div class="container">
       <div class="row g-4">
         <div class="col-lg-5">

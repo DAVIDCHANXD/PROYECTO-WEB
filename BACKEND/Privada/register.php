@@ -83,14 +83,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Registro - AdoptaConAmor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap -->
     <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../FRONTEND/CSS/styles.css">
-</head>
-<body class="bg-light">
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 
-<div class="container py-5">
+    <!-- Tema general -->
+    <link rel="stylesheet" href="/FRONTEND/CSS/index.css">
+
+    <!-- Estilos página de autenticación (login / registro) -->
+    <link rel="stylesheet" href="/FRONTEND/CSS/auth.css">
+
+</head>
+<body class="d-flex flex-column min-vh-100 auth-bg">
+    <div class="container py-5 auth-container">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow-sm border-0">
@@ -116,22 +120,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="col-md-6">
                                 <label class="form-label">Nombre *</label>
                                 <input type="text" name="nombre" class="form-control"
-                                       required value="<?php echo htmlspecialchars($nombre); ?>">
+                                    required value="<?php echo htmlspecialchars($nombre); ?>">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Apellido</label>
                                 <input type="text" name="apellido" class="form-control"
-                                       value="<?php echo htmlspecialchars($apellido); ?>">
+                                    value="<?php echo htmlspecialchars($apellido); ?>">
                             </div>
                             <div class="col-12">
                                 <label class="form-label">Correo electrónico *</label>
                                 <input type="email" name="email" class="form-control" required
-                                       value="<?php echo htmlspecialchars($email); ?>">
+                                    value="<?php echo htmlspecialchars($email); ?>">
                             </div>
                             <div class="col-12">
                                 <label class="form-label">Teléfono</label>
                                 <input type="text" name="telefono" class="form-control"
-                                       value="<?php echo htmlspecialchars($telefono); ?>">
+                                    value="<?php echo htmlspecialchars($telefono); ?>">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Contraseña *</label>

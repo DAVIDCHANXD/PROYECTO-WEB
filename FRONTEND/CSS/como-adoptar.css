@@ -1,0 +1,88 @@
+/* Fondo general detrás de la página (para que no se vea franja clara) */
+/* Ahora el gradient vive en TODO el main */
+.adoptar-bg {
+  background:
+    radial-gradient(circle at top left, #fed7aa 0, #fb7185 35%, #0f172a 80%);
+}
+
+/* ---------- Encabezado / contenido con fondo tipo hero del index ---------- */
+.adoptar-hero {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+  background: transparent;  /* ya no pinta nada, solo usa el del main */
+}
+
+/* Luces suaves como en el hero del index */
+.adoptar-hero::before,
+.adoptar-hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(40px);
+  opacity: 0.35;
+}
+
+.adoptar-hero::before {
+  width: 220px;
+  height: 220px;
+  top: -40px;
+  right: 10%;
+  background: #fb7185;
+}
+
+.adoptar-hero::after {
+  width: 220px;
+  height: 220px;
+  bottom: -60px;
+  left: 0;
+  background: #f97316;
+}
+
+/* Para que el contenido quede por encima de las luces */
+.adoptar-hero .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Textos del encabezado */
+.adoptar-hero h1,
+.adoptar-hero p {
+  color: #f9fafb;
+}
+
+/* Opcional: que la lista y las cards se vean bien sobre el fondo */
+.adoptar-hero .list-group-numbered,
+.adoptar-hero .card {
+  background: #ffffff;
+  border-radius: 1.25rem;
+}
+
+/* ====== HOVER LISTA DE PASOS Y CARDS EN CÓMO ADOPTAR ====== */
+
+/* Lista numerada de pasos (bloque completo) */
+.adoptar-hero .list-group-numbered {
+  border-radius: var(--ac-card-radius);
+  background: #ffffff;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.adoptar-hero .list-group-numbered:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+}
+
+/* Cards de la derecha (Requisitos / Preguntas frecuentes) */
+.adoptar-hero .card {
+  border-radius: var(--ac-card-radius);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.adoptar-hero .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+}

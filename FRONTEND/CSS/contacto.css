@@ -1,82 +1,84 @@
-/* ======== ESTILO GENERAL ======== */
-body {
-    background: #f5f7fa;
-    font-family: 'Inter', sans-serif;
+.contacto-bg {
+  background:
+    radial-gradient(circle at top left, #fed7aa 0, #fb7185 35%, #0f172a 80%);
 }
 
-/* ======== NAVBAR ======== */
-.main-navbar {
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+/* La sección solo da padding y posiciona las "luces" */
+.contacto-hero {
+  position: relative;
+  overflow: hidden;
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+  background: transparent;  /* el fondo ya lo pone contacto-bg */
+  color: #fff;
 }
 
-.main-navbar .navbar-brand {
-    color: #222 !important;
-    font-weight: 700;
+/* Lucecitas suaves encima del gradient */
+.contacto-hero::before,
+.contacto-hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(40px);
+  opacity: 0.35;
 }
 
-.logo-pill {
-    background: #0d6efd;
-    padding: 6px 10px;
-    border-radius: 10px;
-    color: white;
-    margin-right: 5px;
+.contacto-hero::before {
+  width: 220px;
+  height: 220px;
+  top: -40px;
+  right: 10%;
+  background: #fb7185;
 }
 
-.nav-link {
-    color: #333 !important;
-    transition: 0.3s;
-    font-weight: 500;
+.contacto-hero::after {
+  width: 220px;
+  height: 220px;
+  bottom: -60px;
+  left: 0;
+  background: #f97316;
 }
 
-.nav-link:hover {
-    color: #0d6efd !important;
+/* Para que el contenido quede por encima de las luces */
+.contacto-hero .container {
+  position: relative;
+  z-index: 1;
 }
 
-.nav-link.active {
-    color: #0d6efd !important;
-    font-weight: 600;
+/* Título y texto de introducción en blanco para que se lean sobre el gradient */
+.contacto-hero h1 {
+  color: #f9fafb;
 }
 
-/* ======== TARJETAS (glassmorphism) ======== */
-.card {
-    border-radius: 18px !important;
-    border: none;
-    backdrop-filter: blur(8px);
-    background: rgba(255, 255, 255, 0.55);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+/* Solo el párrafo de introducción, el que está suelto arriba */
+.contacto-hero > .container > p.text-muted {
+  color: rgba(249, 250, 251, 0.85) !important;
 }
 
-/* ======== FORMULARIO ======== */
-.form-control {
-    border-radius: 12px;
-    padding: 10px 14px;
-    border: 1px solid #d4d4d4;
-    background: #fff;
-    transition: 0.2s;
+/* ========= HOVER CARDS CONTACTO ========= */
+.contacto-hero .card {
+  border-radius: 1.25rem;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.18);
+  background: #ffffff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.form-control:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 0.15rem rgba(13,110,253,0.25);
+.contacto-hero .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
 }
 
-/* ======== BOTONES ======== */
-.btn-primary {
-    background: linear-gradient(135deg, #0d6efd, #4c8dff);
-    border: none;
-    padding: 10px 18px;
-    font-weight: 500;
-    border-radius: 12px;
+/* ========= HOVER BOTÓN ENVIAR ========= */
+.contacto-hero .btn-primary {
+  border-radius: 999px;
+  padding-inline: 1.5rem;
+  /* respeta el gradient global de .btn-primary */
+  box-shadow: 0 14px 30px rgba(248, 113, 113, 0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.btn-primary:hover {
-    background: linear-gradient(135deg, #0b5ed7, #3d7be0);
-}
-
-/* ======== FOOTER ======== */
-.site-footer {
-    background: #0d6efd;
-    color: white;
+.contacto-hero .btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 40px rgba(248, 113, 113, 0.55);
 }

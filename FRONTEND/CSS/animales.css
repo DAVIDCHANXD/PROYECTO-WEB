@@ -1,130 +1,84 @@
-/* ================================
-   FONDO GENERAL
-=================================*/
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #0f0f0f, #1a1a1a, #ff8c42);
-    background-size: cover;
-    background-attachment: fixed;
-    color: #fff;
+/* Fondo general muy clarito para la página de animales */
+/* Ahora TODO el main de animales tiene el gradient */
+.animales-bg {
+  background:
+    radial-gradient(circle at top left, #fed7aa 0, #fb7185 35%, #0f172a 80%);
 }
 
-/* ================================
-   NAVBAR
-=================================*/
-.glass-nav {
-    background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+/* ---------- Encabezado de animales con fondo tipo hero del index ---------- */
+.animales-hero {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+  background: transparent;  /* antes tenía el gradient */
 }
 
-.navbar-brand {
-    color: #ff8c42 !important;
+/* Luces suaves como el hero del index */
+.animales-hero::before,
+.animales-hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(40px);
+  opacity: 0.35;
 }
 
-.nav-link {
-    color: #ffffff !important;
-    transition: 0.3s;
+.animales-hero::before {
+  width: 220px;
+  height: 220px;
+  top: -40px;
+  right: 10%;
+  background: #fb7185;
 }
 
-.nav-link:hover,
-.nav-link.active {
-    color: #ff8c42 !important;
+.animales-hero::after {
+  width: 220px;
+  height: 220px;
+  bottom: -60px;
+  left: 0;
+  background: #f97316;
 }
 
-/* ================================
-   TARJETAS DE ANIMALES
-=================================*/
+/* Para que el contenido quede por encima de las "luces" */
+.animales-hero .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Colores de textos en el encabezado */
+.animales-hero h1 {
+  color: #f9fafb;
+}
+
+.animales-hero p {
+  color: rgba(249, 250, 251, 0.85);
+}
+
+/* ====== HOVER TARJETAS Y BOTÓN EN ANIMALES ====== */
+
+/* Tarjetas de animales */
 .animal-card {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    padding: 15px;
-    transition: transform 0.2s ease-in-out, box-shadow 0.3s;
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--ac-card-radius);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.18);
+  background: #ffffff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .animal-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
 }
 
-.animal-card img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 18px;
+/* Botón "Más información" */
+.animal-card .btn-outline-primary {
+  border-radius: 999px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+              background-color 0.15s ease, color 0.15s ease;
 }
 
-/* ================================
-   BOTONES
-=================================*/
-.btn-adoptar {
-    background-color: #4274ff;
-    border: none;
-    color: #000;
-    font-weight: 600;
-    width: 100%;
-    border-radius: 12px;
-    padding: 10px;
-    transition: 0.3s;
-}
-
-.btn-adoptar:hover {
-    background-color: #5f82ff;
-}
-
-/* ================================
-   TITULOS
-=================================*/
-.page-title {
-    color: #426eff;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-/* ================================
-   BUSCADOR
-=================================*/
-.search-box input {
-    border-radius: 12px;
-    border: none;
-    padding: 12px 18px;
-    background: rgba(255,255,255,0.12);
-    backdrop-filter: blur(10px);
-    color: white;
-}
-
-.search-box input::placeholder {
-    color: #ccc;
-}
-
-/* ================================
-   MODAL
-=================================*/
-.modal-content {
-    background: rgba(0,0,0,0.75);
-    border-radius: 20px;
-    color: white;
-}
-
-.modal-header {
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-}
-
-.modal-footer button {
-    border-radius: 12px;
-}
-
-/* ================================
-   FOOTER
-=================================*/
-footer {
-    text-align: center;
-    margin-top: 40px;
-    padding: 20px;
-    color: #ccc;
+.animal-card .btn-outline-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(248, 113, 113, 0.45);
 }

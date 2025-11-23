@@ -13,8 +13,8 @@ $nombre = $_SESSION['nombre'] ?? 'Usuario';
 require_once __DIR__ . '/../DATABASE/conexion.php';
 
 // Valores por defecto por si algo falla
-$totalAnimales   = 0;
-$totalUsuarios   = 0;
+$totalAnimales = 0;
+$totalUsuarios = 0;
 
 // Intentamos contar animales
 try {
@@ -48,14 +48,19 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
     <!-- Bootstrap Icons (para algunos iconitos bonitos) -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <!-- Tus estilos -->
-    <link rel="stylesheet" href="../../FRONTEND/CSS/styles.css">
+    <!-- Tema general del sitio -->
+    <link rel="stylesheet" href="/FRONTEND/CSS/index.css">
+    <!-- Estilos específicos del panel -->
+    <link rel="stylesheet" href="/FRONTEND/CSS/dashboard.css">
 </head>
-<body class="bg-light">
+<body class="d-flex flex-column min-vh-100 dashboard-bg">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar dashboard-navbar">
   <div class="container">
-    <a class="navbar-brand fw-bold" href="dashboard.php">Panel AdoptaConAmor</a>
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="dashboard.php">
+      <span class="logo-pill">AC</span>
+      <span>Panel AdoptaConAmor</span>
+    </a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarNav">
@@ -94,7 +99,7 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
     <!-- Encabezado / Bienvenida -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card border-0 shadow-sm">
+            <div class="card border-0 dashboard-header-card">
                 <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center">
                     <div>
                         <h1 class="h4 mb-1">
@@ -121,11 +126,11 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
     <!-- Tarjetas de resumen -->
     <div class="row g-4 mb-4">
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm border-0">
+            <div class="card h-100 border-0 dashboard-stat-card">
                 <div class="card-body d-flex align-items-center">
                     <div class="me-3">
-                        <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
-                            <i class="bi bi-heart-pulse text-primary fs-4"></i>
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                            <i class="bi bi-heart-pulse fs-4 text-primary"></i>
                         </div>
                     </div>
                     <div>
@@ -139,13 +144,13 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
             </div>
         </div>
 
-        <!-- Puedes ir usando esto después, por ahora solo muestra el contador de usuarios -->
+        <!-- Usuarios -->
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm border-0">
+            <div class="card h-100 border-0 dashboard-stat-card">
                 <div class="card-body d-flex align-items-center">
                     <div class="me-3">
-                        <div class="rounded-circle bg-info bg-opacity-10 d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
-                            <i class="bi bi-people text-info fs-4"></i>
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                            <i class="bi bi-people fs-4 text-info"></i>
                         </div>
                     </div>
                     <div>
@@ -159,13 +164,13 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
             </div>
         </div>
 
-        <!-- Tercera tarjeta: por ahora es informativa -->
+        <!-- Solicitudes (placeholder) -->
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm border-0">
+            <div class="card h-100 border-0 dashboard-stat-card">
                 <div class="card-body d-flex align-items-center">
                     <div class="me-3">
-                        <div class="rounded-circle bg-warning bg-opacity-10 d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
-                            <i class="bi bi-chat-left-text text-warning fs-4"></i>
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                            <i class="bi bi-chat-left-text fs-4 text-warning"></i>
                         </div>
                     </div>
                     <div>
@@ -189,7 +194,7 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
         </div>
 
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm border-0">
+            <div class="card h-100 border-0 dashboard-section-card">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Animales</h5>
                     <p class="card-text flex-grow-1">
@@ -204,7 +209,7 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
         </div>
 
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm border-0">
+            <div class="card h-100 border-0 dashboard-section-card">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Solicitudes de adopción</h5>
                     <p class="card-text flex-grow-1">
@@ -219,7 +224,7 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
         </div>
 
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm border-0">
+            <div class="card h-100 border-0 dashboard-section-card">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Usuarios</h5>
                     <p class="card-text flex-grow-1">

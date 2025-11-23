@@ -58,8 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // 4. Obtener datos actuales del usuario para mostrarlos en el formulario
 try {
     $sqlDatos = 'SELECT nombre, email, telefono 
-                 FROM usuarios 
-                 WHERE id_usuario = :id';
+                FROM usuarios 
+                WHERE id_usuario = :id';
 
     $stmtDatos = $pdo->prepare($sqlDatos);
     $stmtDatos->execute([':id' => $idUsuario]);
@@ -89,42 +89,44 @@ $inicial       = strtoupper(substr($nombreUsuario, 0, 1));
     <title>Mi perfil - AdoptaConAmor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap 5 -->
+    <!-- Bootstrap -->
     <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <!-- Tus estilos -->
-    <link rel="stylesheet" href="../../FRONTEND/CSS/styles.css">
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+    <!-- Tema general -->
+    <link rel="stylesheet" href="/FRONTEND/CSS/index.css">
+
+    <!-- Estilos página de autenticación (login / registro) -->
+    <link rel="stylesheet" href="/FRONTEND/CSS/auth.css">
+
 </head>
-<body class="bg-light">
+<body class="d-flex flex-column min-vh-100 auth-bg">
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="dashboard.php">Panel AdoptaConAmor</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="dashboard.php">Panel AdoptaConAmor</a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link active" href="perfil.php">
-            <i class="bi bi-person-circle me-1"></i>Mi perfil
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="logout.php">
-            <i class="bi bi-box-arrow-right me-1"></i>Cerrar sesión
-          </a>
-        </li>
-      </ul>
+        <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+            <a class="nav-link active" href="perfil.php">
+                <i class="bi bi-person-circle me-1"></i>Mi perfil
+            </a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="logout.php">
+                <i class="bi bi-box-arrow-right me-1"></i>Cerrar sesión
+            </a>
+            </li>
+        </ul>
+        </div>
     </div>
-  </div>
 </nav>
 
 <!-- CONTENIDO -->
@@ -138,7 +140,7 @@ $inicial       = strtoupper(substr($nombreUsuario, 0, 1));
                     <!-- Cabecera de perfil con avatar y datos básicos -->
                     <div class="d-flex align-items-center mb-4">
                         <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
-                             style="width:64px; height:64px; font-size:1.8rem;">
+                            style="width:64px; height:64px; font-size:1.8rem;">
                             <?php echo htmlspecialchars($inicial); ?>
                         </div>
                         <div>

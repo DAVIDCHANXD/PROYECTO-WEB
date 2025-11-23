@@ -1,0 +1,96 @@
+/* ======== Fondo general para LOGIN y REGISTER ======== */
+/* Se aplica al <body class="auth-bg"> en ambas páginas */
+.auth-bg {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* Degradado global (como en las demás páginas) */
+  background:
+    radial-gradient(circle at top left, #fed7aa 0, #fb7185 35%, #0f172a 80%) !important;
+}
+
+/* En LOGIN: la hero ocupa todo el espacio entre navbar y footer
+   y NO pone otro fondo (solo usa el del body) */
+.auth-bg .hero-section {
+  flex: 1;                      /* ocupa todo el espacio libre */
+  display: flex;
+  align-items: center;          /* centra verticalmente la tarjeta */
+  background: transparent;      /* importantísimo: sin fondo propio */
+}
+
+/* ======== Cards de autenticación (login + register) ======== */
+
+.auth-bg .card {
+  border-radius: 1.5rem;
+  border: 1px solid rgba(248, 250, 252, 0.8);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.30);
+  background: #ffffff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-bg .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 26px 55px rgba(15, 23, 42, 0.45);
+}
+
+/* Títulos y textos */
+.auth-bg h1,
+.auth-bg .h4,
+.auth-bg h4 {
+  color: #111827;
+}
+
+.auth-bg p.text-muted {
+  color: #6b7280 !important;
+}
+
+/* Alertas un poco más redondeadas */
+.auth-bg .alert {
+  border-radius: 0.75rem;
+}
+
+/* ======== Inputs de formularios ======== */
+
+.auth-bg .form-control {
+  border-radius: 0.75rem;
+  border-color: rgba(148, 163, 184, 0.8);
+}
+
+.auth-bg .form-control:focus {
+  border-color: var(--ac-primary);
+  box-shadow: 0 0 0 0.2rem rgba(249, 115, 22, 0.28);
+}
+
+/* ======== Botones principales ======== */
+
+.auth-bg .btn-primary {
+  border-radius: 999px;
+  padding-block: 0.6rem;
+  background: linear-gradient(135deg, var(--ac-primary), var(--ac-accent));
+  border-color: transparent;
+  box-shadow: 0 14px 30px rgba(248, 113, 113, 0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-bg .btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 40px rgba(248, 113, 113, 0.65);
+}
+
+/* Enlaces dentro de los textos de login/register */
+.auth-bg a {
+  color: var(--ac-primary-dark);
+}
+
+.auth-bg a:hover {
+  color: var(--ac-accent);
+}
+
+/* ======== Centrado vertical en REGISTER ======== */
+/* Solo afecta al <div class="container auth-container"> del register */
+.auth-bg .auth-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
