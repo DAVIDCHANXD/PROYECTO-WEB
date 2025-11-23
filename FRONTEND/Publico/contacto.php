@@ -1,48 +1,69 @@
 <?php
 // FRONTEND/Publico/contacto.php
 
-// 1) Conexión a la BD
 require_once __DIR__ . '/../../BACKEND/DATABASE/conexion.php';
 
 $mensajeExito = '';
 $mensajeError = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // 2) Recibir datos del formulario
-    $nombre  = trim($_POST['nombre']  ?? '');
-    $email   = trim($_POST['email']   ?? '');
-    $mensaje = trim($_POST['mensaje'] ?? '');
+// Variables para repoblar el formulario si hay error
+$nombre   = '';
+$email    = '';
+$telefono = '';
+$asunto   = '';
+$mensaje  = '';
 
-    // 3) Validaciones básicas
-    if ($nombre === '' || $email === '' || $mensaje === '') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // 1) Recibir datos
+    $nombre   = trim($_POST['nombre']   ?? '');
+    $email    = trim($_POST['email']    ?? '');
+    $telefono = trim($_POST['telefono'] ?? '');
+    $asunto   = trim($_POST['asunto']   ?? '');
+    $mensaje  = trim($_POST['mensaje']  ?? '');
+
+    // 2) Validaciones básicas
+    if ($nombre === '' || $email === '' || $telefono === '' || $asunto === '' || $mensaje === '') {
         $mensajeError = 'Por favor llena todos los campos.';
     } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $mensajeError = 'El correo no tiene un formato válido.';
     } else {
-        try {
-            // 4) Insertar en la base de datos
-            // OJO: Ajusta el nombre de la tabla y columnas si las tuyas son diferentes
-            $sql = "INSERT INTO mensajes_contacto (nombre, email, mensaje, fecha_envio)
-                    VALUES (:nombre, :email, :mensaje, NOW())";
+        // (Opcional) Validar teléfono muy simple
+        // if (!preg_match('/^[0-9+\s\-]{7,20}$/', $telefono)) {
+        //     $mensajeError = 'El teléfono no parece válido.';
+        // }
 
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([
-                ':nombre'  => $nombre,
-                ':email'   => $email,
-                ':mensaje' => $mensaje
-            ]);
+        if ($mensajeError === '') {
+            try {
+                // 3) Insertar en la base de datos
+                // OJO: ajusta el nombre de la tabla/columnas si tus nombres son diferentes
+                $sql = "INSERT INTO mensajes_contacto 
+                        (nombre, email, telefono, asunto, mensaje, fecha_envio)
+                        VALUES 
+                        (:nombre, :email, :telefono, :asunto, :mensaje, NOW())";
 
-            $mensajeExito = 'Tu mensaje se envió correctamente. ¡Gracias por contactarnos!';
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([
+                    ':nombre'   => $nombre,
+                    ':email'    => $email,
+                    ':telefono' => $telefono,
+                    ':asunto'   => $asunto,
+                    ':mensaje'  => $mensaje
+                ]);
 
-            // Opcional: limpiar campos después de guardar
-            $nombre = '';
-            $email  = '';
-            $mensaje = '';
+                $mensajeExito = 'Tu mensaje se envió correctamente. ¡Gracias por contactarnos!';
 
-        } catch (PDOException $e) {
-            $mensajeError = 'Error al guardar el mensaje. Intenta más tarde.';
-            // Puedes descomentar esto mientras pruebas:
-            // $mensajeError .= ' Detalle: ' . $e->getMessage();
+                // Limpiar campos
+                $nombre   = '';
+                $email    = '';
+                $telefono = '';
+                $asunto   = '';
+                $mensaje  = '';
+
+            } catch (PDOException $e) {
+                $mensajeError = 'Error al guardar el mensaje. Intenta más tarde.';
+                // Para depurar mientras desarrollas:
+                // $mensajeError .= ' Detalle: ' . $e->getMessage();
+            }
         }
     }
 }
@@ -123,7 +144,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   <div class="alert alert-danger py-2"><?php echo htmlspecialchars($mensajeError); ?></div>
               <?php endif; ?>
 
-              <!-- 5) Formulario que envía por POST a esta misma página -->
               <form method="post" action="contacto.php">
                 <div class="row g-3">
                   <div class="col-md-6">
@@ -133,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       name="nombre"
                       class="form-control"
                       placeholder="Tu nombre"
-                      value="<?php echo isset($nombre) ? htmlspecialchars($nombre) : ''; ?>"
+                      value="<?php echo htmlspecialchars($nombre); ?>"
                       required
                     >
                   </div>
@@ -144,10 +164,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       name="email"
                       class="form-control"
                       placeholder="tu@correo.com"
-                      value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>"
+                      value="<?php echo htmlspecialchars($email); ?>"
                       required
                     >
                   </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Teléfono</label>
+                    <input
+                      type="text"
+                      name="telefono"
+                      class="form-control"
+                      placeholder="Tu número"
+                      value="<?php echo htmlspecialchars($telefono); ?>"
+                      required
+                    >
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Asunto</label>
+                    <input
+                      type="text"
+                      name="asunto"
+                      class="form-control"
+                      placeholder="Motivo de tu mensaje"
+                      value="<?php echo htmlspecialchars($asunto); ?>"
+                      required
+                    >
+                  </div>
+
                   <div class="col-12">
                     <label class="form-label">Mensaje</label>
                     <textarea
@@ -156,7 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       rows="4"
                       placeholder="Escribe tu mensaje..."
                       required
-                    ><?php echo isset($mensaje) ? htmlspecialchars($mensaje) : ''; ?></textarea>
+                    ><?php echo htmlspecialchars($mensaje); ?></textarea>
                   </div>
                   <div class="col-12 text-end">
                     <button type="submit" class="btn btn-primary">
