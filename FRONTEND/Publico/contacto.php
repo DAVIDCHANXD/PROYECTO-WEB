@@ -1,3 +1,52 @@
+<?php
+// FRONTEND/Publico/contacto.php
+
+// 1) Conexión a la BD
+require_once __DIR__ . '/../../BACKEND/DATABASE/conexion.php';
+
+$mensajeExito = '';
+$mensajeError = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // 2) Recibir datos del formulario
+    $nombre  = trim($_POST['nombre']  ?? '');
+    $email   = trim($_POST['email']   ?? '');
+    $mensaje = trim($_POST['mensaje'] ?? '');
+
+    // 3) Validaciones básicas
+    if ($nombre === '' || $email === '' || $mensaje === '') {
+        $mensajeError = 'Por favor llena todos los campos.';
+    } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $mensajeError = 'El correo no tiene un formato válido.';
+    } else {
+        try {
+            // 4) Insertar en la base de datos
+            // OJO: Ajusta el nombre de la tabla y columnas si las tuyas son diferentes
+            $sql = "INSERT INTO mensajes_contacto (nombre, email, mensaje, fecha_envio)
+                    VALUES (:nombre, :email, :mensaje, NOW())";
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':nombre'  => $nombre,
+                ':email'   => $email,
+                ':mensaje' => $mensaje
+            ]);
+
+            $mensajeExito = 'Tu mensaje se envió correctamente. ¡Gracias por contactarnos!';
+
+            // Opcional: limpiar campos después de guardar
+            $nombre = '';
+            $email  = '';
+            $mensaje = '';
+
+        } catch (PDOException $e) {
+            $mensajeError = 'Error al guardar el mensaje. Intenta más tarde.';
+            // Puedes descomentar esto mientras pruebas:
+            // $mensajeError .= ' Detalle: ' . $e->getMessage();
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -38,7 +87,7 @@
 </nav>
 
 <main class="flex-grow-1 contacto-bg">
-<section class="py-5 contacto-hero">
+  <section class="py-5 contacto-hero">
     <div class="container">
       <div class="row g-4">
         <div class="col-lg-5">
@@ -65,28 +114,58 @@
           <div class="card border-0 shadow-sm">
             <div class="card-body">
               <h5 class="card-title mb-3">Envíanos un mensaje</h5>
-              <form>
+
+              <!-- Mensajes de éxito / error -->
+              <?php if ($mensajeExito): ?>
+                  <div class="alert alert-success py-2"><?php echo htmlspecialchars($mensajeExito); ?></div>
+              <?php endif; ?>
+              <?php if ($mensajeError): ?>
+                  <div class="alert alert-danger py-2"><?php echo htmlspecialchars($mensajeError); ?></div>
+              <?php endif; ?>
+
+              <!-- 5) Formulario que envía por POST a esta misma página -->
+              <form method="post" action="contacto.php">
                 <div class="row g-3">
                   <div class="col-md-6">
                     <label class="form-label">Nombre</label>
-                    <input type="text" class="form-control" placeholder="Tu nombre">
+                    <input
+                      type="text"
+                      name="nombre"
+                      class="form-control"
+                      placeholder="Tu nombre"
+                      value="<?php echo isset($nombre) ? htmlspecialchars($nombre) : ''; ?>"
+                      required
+                    >
                   </div>
                   <div class="col-md-6">
                     <label class="form-label">Correo</label>
-                    <input type="email" class="form-control" placeholder="tu@correo.com">
+                    <input
+                      type="email"
+                      name="email"
+                      class="form-control"
+                      placeholder="tu@correo.com"
+                      value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>"
+                      required
+                    >
                   </div>
                   <div class="col-12">
                     <label class="form-label">Mensaje</label>
-                    <textarea class="form-control" rows="4"
-                              placeholder="Escribe tu mensaje..."></textarea>
+                    <textarea
+                      name="mensaje"
+                      class="form-control"
+                      rows="4"
+                      placeholder="Escribe tu mensaje..."
+                      required
+                    ><?php echo isset($mensaje) ? htmlspecialchars($mensaje) : ''; ?></textarea>
                   </div>
                   <div class="col-12 text-end">
-                    <button type="button" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary">
                       Enviar mensaje
                     </button>
                   </div>
                 </div>
               </form>
+
             </div>
           </div>
 
