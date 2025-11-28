@@ -118,7 +118,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             posteriormente por los datos reales del refugio con el que trabajes.
           </p>
 
-          <div class="card border-0 shadow-sm h-100">
+          <!-- 👇 quitamos h-100 -->
+          <div class="card border-0 shadow-sm">
             <div class="card-body">
               <h5 class="card-title">Refugio Patitas Felices</h5>
               <p class="mb-1">TuCiudad, TuEstado</p>
@@ -130,6 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
           </div>
         </div>
+
 
         <div class="col-lg-7">
           <div class="card border-0 shadow-sm">
