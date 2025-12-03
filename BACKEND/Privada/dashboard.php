@@ -1,25 +1,41 @@
 <?php
 // BACKEND/Privada/dashboard.php
 session_start();
+
+// Mientras desarrollas, esto ayuda a ver errores de PHP
+// (quítalo en producción si quieres):
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 if (!isset($_SESSION['id_usuario'])) {
     header('Location: login.php');
     exit;
 }
+
 $nombre = $_SESSION['nombre'] ?? 'Usuario';
+
+// OJO: revisa que la carpeta se llame exactamente "DATABASE" así en tu servidor.
+// Si tu carpeta es "Database" o "database", cambia aquí.
 require_once __DIR__ . '/../DATABASE/conexion.php';
+
 $totalAnimales = 0;
 $totalUsuarios = 0;
+
 try {
+    // Asegúrate de que en conexion.php la variable se llame $pdo
     $stmt = $pdo->query('SELECT COUNT(*) AS total FROM animales');
     $totalAnimales = (int) $stmt->fetchColumn();
 } catch (PDOException $e) {
+    // echo "Error animales: " . $e->getMessage();
 }
 
 try {
     $stmt = $pdo->query('SELECT COUNT(*) AS total FROM usuarios');
     $totalUsuarios = (int) $stmt->fetchColumn();
 } catch (PDOException $e) {
+    // echo "Error usuarios: " . $e->getMessage();
 }
+
 $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
 ?>
 
@@ -29,14 +45,25 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
     <meta charset="UTF-8">
     <title>Panel - AdoptaConAmor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="estilos"
+
+    <!-- AQUÍ ESTABA EL ERROR: rel="estilos" / rel="iconos" -->
+    <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="iconos"
+    <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!-- Rutas a tus CSS (ajusta si es necesario) -->
+    <!-- Si tu DocumentRoot es la carpeta del proyecto, esto funciona: -->
     <link rel="stylesheet" href="/FRONTEND/CSS/index.css">
     <link rel="stylesheet" href="/FRONTEND/CSS/dashboard.css">
+
+    <!-- Si ves que no carga el CSS, prueba estas rutas relativas:
+    <link rel="stylesheet" href="../../FRONTEND/CSS/index.css">
+    <link rel="stylesheet" href="../../FRONTEND/CSS/dashboard.css">
+    -->
 </head>
 <body class="d-flex flex-column min-vh-100 dashboard-bg">
+
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar dashboard-navbar">
   <div class="container">
     <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="dashboard.php">
@@ -98,6 +125,7 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
             </div>
         </div>
     </div>
+
     <div class="row g-4 mb-4">
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-stat-card">
@@ -117,6 +145,7 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
                 </div>
             </div>
         </div>
+
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-stat-card">
                 <div class="card-body d-flex align-items-center">
@@ -135,6 +164,7 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
                 </div>
             </div>
         </div>
+
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-stat-card">
                 <div class="card-body d-flex align-items-center">
@@ -156,10 +186,12 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
             </div>
         </div>
     </div>
+
     <div class="row g-4">
         <div class="col-12">
             <h2 class="h5 mb-3">Secciones del panel</h2>
         </div>
+
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-section-card">
                 <div class="card-body d-flex flex-column">
@@ -174,6 +206,7 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
                 </div>
             </div>
         </div>
+
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-section-card">
                 <div class="card-body d-flex flex-column">
@@ -188,6 +221,7 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
                 </div>
             </div>
         </div>
+
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-section-card">
                 <div class="card-body d-flex flex-column">
@@ -204,6 +238,7 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
         </div>
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
