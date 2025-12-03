@@ -5,7 +5,6 @@ require_once __DIR__ . '/../DATABASE/conexion.php';
 
 $errores = '';
 $email   = '';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -51,32 +50,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Iniciar sesión - AdoptaConAmor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<!-- Bootstrap -->
 <link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-
-<!-- Tema general -->
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="/FRONTEND/CSS/index.css">
-
-<!-- Estilos página de autenticación (login / registro) -->
 <link rel="stylesheet" href="/FRONTEND/CSS/auth.css">
 </head>
 
 <body class="d-flex flex-column min-vh-100 auth-bg">
-
-<!-- NAVBAR igual al INDEX -->
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar">
   <div class="container">
     <a class="navbar-brand fw-bold" href="../../index.html">
       <span class="logo-pill">AC</span> AdoptaConAmor
     </a>
-
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto align-items-lg-center">
         <li class="nav-item"><a class="nav-link" href="../../index.html">Inicio</a></li>
@@ -92,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </div>
 </nav>
-
 
 <!-- HERO igual al inicio -->
 <section class="hero-section d-flex align-items-center">
@@ -145,19 +133,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </section>
-
-
-
-
 <footer class="text-white text-center py-3 mt-auto site-footer">
   <div class="container">
     <small>&copy; <?php echo date('Y'); ?> AdoptaConAmor </small>
   </div>
 </footer>
-
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>
 

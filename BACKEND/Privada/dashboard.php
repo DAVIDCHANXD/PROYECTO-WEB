@@ -1,82 +1,60 @@
 <?php
 // BACKEND/Privada/dashboard.php
 session_start();
-
 if (!isset($_SESSION['id_usuario'])) {
     header('Location: login.php');
     exit;
 }
-
 $nombre = $_SESSION['nombre'] ?? 'Usuario';
-
-// Conexión a la BD para sacar pequeños resúmenes
 require_once __DIR__ . '/../DATABASE/conexion.php';
-
-// Valores por defecto por si algo falla
 $totalAnimales = 0;
 $totalUsuarios = 0;
-
-// Intentamos contar animales
 try {
     $stmt = $pdo->query('SELECT COUNT(*) AS total FROM animales');
     $totalAnimales = (int) $stmt->fetchColumn();
 } catch (PDOException $e) {
-    // Si aún no existe la tabla, simplemente deja el valor en 0
 }
 
-// Intentamos contar usuarios
 try {
     $stmt = $pdo->query('SELECT COUNT(*) AS total FROM usuarios');
     $totalUsuarios = (int) $stmt->fetchColumn();
 } catch (PDOException $e) {
-    // Igual, si falla lo dejamos en 0
 }
-
-// Saber si venimos del perfil actualizado
 $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Panel - AdoptaConAmor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet"
+    <link rel="estilos"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <!-- Bootstrap Icons (para algunos iconitos bonitos) -->
-    <link rel="stylesheet"
+    <link rel="iconos"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <!-- Tema general del sitio -->
     <link rel="stylesheet" href="/FRONTEND/CSS/index.css">
-    <!-- Estilos específicos del panel -->
     <link rel="stylesheet" href="/FRONTEND/CSS/dashboard.css">
 </head>
 <body class="d-flex flex-column min-vh-100 dashboard-bg">
-
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar dashboard-navbar">
   <div class="container">
     <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="dashboard.php">
       <span class="logo-pill">AC</span>
       <span>Panel AdoptaConAmor</span>
     </a>
-
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarNav">
       <div class="ms-auto d-flex align-items-center">
         <span class="navbar-text me-3">
           Hola, <?php echo htmlspecialchars($nombre); ?>
         </span>
-
         <a href="/BACKEND/Privada/perfil.php" class="btn btn-outline-light btn-sm me-2">
           Mi perfil
         </a>
-
         <a href="logout.php" class="btn btn-outline-light btn-sm">
           Cerrar sesión
         </a>
@@ -95,8 +73,6 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
 <?php endif; ?>
 
 <div class="container py-4">
-
-    <!-- Encabezado / Bienvenida -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card border-0 dashboard-header-card">
@@ -122,8 +98,6 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
             </div>
         </div>
     </div>
-
-    <!-- Tarjetas de resumen -->
     <div class="row g-4 mb-4">
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-stat-card">
@@ -143,8 +117,6 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
                 </div>
             </div>
         </div>
-
-        <!-- Usuarios -->
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-stat-card">
                 <div class="card-body d-flex align-items-center">
@@ -163,8 +135,6 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
                 </div>
             </div>
         </div>
-
-        <!-- Solicitudes (placeholder) -->
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-stat-card">
                 <div class="card-body d-flex align-items-center">
@@ -186,13 +156,10 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
             </div>
         </div>
     </div>
-
-    <!-- Secciones principales del panel -->
     <div class="row g-4">
         <div class="col-12">
             <h2 class="h5 mb-3">Secciones del panel</h2>
         </div>
-
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-section-card">
                 <div class="card-body d-flex flex-column">
@@ -207,7 +174,6 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
                 </div>
             </div>
         </div>
-
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-section-card">
                 <div class="card-body d-flex flex-column">
@@ -222,7 +188,6 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
                 </div>
             </div>
         </div>
-
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-section-card">
                 <div class="card-body d-flex flex-column">
@@ -238,9 +203,7 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
             </div>
         </div>
     </div>
-
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

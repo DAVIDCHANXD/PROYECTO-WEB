@@ -18,8 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telefono  = trim($_POST['telefono'] ?? '');
     $password  = $_POST['password']  ?? '';
     $password2 = $_POST['password2'] ?? '';
-
-    // Nombre completo = nombre + apellido (guardamos todo en la columna nombre)
     $nombreCompleto = trim($nombre . ' ' . $apellido);
 
     if ($nombreCompleto === '' || $email === '' || $password === '' || $password2 === '') {
@@ -51,13 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Hashear la contraseña
                 $hash = password_hash($password, PASSWORD_DEFAULT);
-
-                // OJO: ya no usamos 'apellidos', solo las columnas reales
                 $stmtIns = $pdo->prepare('
                     INSERT INTO usuarios (id_rol, nombre, email, password_hash, telefono)
                     VALUES (:id_rol, :nombre, :email, :password_hash, :telefono)
                 ');
-
                 $stmtIns->execute([
                     ':id_rol'        => $idRol,
                     ':nombre'        => $nombreCompleto,
@@ -65,9 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':password_hash' => $hash,
                     ':telefono'      => $telefono !== '' ? $telefono : null,
                 ]);
-
                 $exito = 'Tu cuenta se creó correctamente. Ahora puedes iniciar sesión.';
-                // Limpiar campos del formulario
                 $nombre = $apellido = $email = $telefono = '';
             }
         } catch (PDOException $e) {
@@ -85,11 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <link rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-
-    <!-- Tema general -->
     <link rel="stylesheet" href="/FRONTEND/CSS/index.css">
-
-    <!-- Estilos página de autenticación (login / registro) -->
     <link rel="stylesheet" href="/FRONTEND/CSS/auth.css">
 
 </head>
@@ -166,7 +155,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
