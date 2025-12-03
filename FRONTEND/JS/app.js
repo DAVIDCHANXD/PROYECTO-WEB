@@ -1,16 +1,76 @@
 // FRONTEND/JS/app.js
+// Cuando cargue la página, intentamos llenar #lista-animales
+document.addEventListener('DOMContentLoaded', () => {
+  cargarAnimales();
+});
 
+// Mapa simple de tipos por ID (si tu BD usa id numérico)
 const mapTipos = {
   1: 'Perro',
   2: 'Gato',
   3: 'Otros'
 };
 
-/**
- * 
- * @param {Object} animal - Objeto con los datos del animal.
- * @returns {HTMLElement} - Columna con la card lista para agregar al DOM.
- */
+function cargarAnimales(contenedor) {
+  // Si no me mandan contenedor, lo busco yo
+  contenedor = contenedor || document.getElementById('lista-animales');
+  if (!contenedor) return;
+
+  contenedor.innerHTML =
+    '<div class="col-12 text-center">' +
+      '<div class="spinner-border" role="status"></div>' +
+      '<p class="mt-2">Cargando animales...</p>' +
+    '</div>';
+
+  fetch(API_ANIMALES_URL + '?modo=json')
+    .then(res => {
+      if (!res.ok) {
+        throw new Error('HTTP ' + res.status);
+      }
+      return res.json();
+    })
+    .then(data => {
+      // Permitimos dos formatos:
+      //  a) { ok:true, animales:[...] }
+      //  b) [ ...animales... ] directo
+      let animales = [];
+
+      if (Array.isArray(data)) {
+        animales = data;
+      } else if (data && Array.isArray(data.animales)) {
+        if (data.ok === false) {
+          throw new Error(data.error || 'Error en la respuesta del servidor');
+        }
+        animales = data.animales;
+      } else {
+        throw new Error('Formato de respuesta no válido');
+      }
+
+      contenedor.innerHTML = '';
+
+      if (!animales.length) {
+        contenedor.innerHTML =
+          '<div class="col-12">' +
+            '<div class="alert alert-info">No hay animales disponibles por ahora.</div>' +
+          '</div>';
+        return;
+      }
+
+      animales.forEach(a => {
+        contenedor.appendChild(crearCardAnimal(a));
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      contenedor.innerHTML =
+        '<div class="col-12">' +
+          '<div class="alert alert-danger">Error al cargar los animales: '
+          + (err.message || '') +
+          '</div>' +
+        '</div>';
+    });
+}
+
 function crearCardAnimal(animal) {
   const col  = document.createElement('div');
   col.className = 'col-sm-6 col-lg-4';
@@ -18,9 +78,12 @@ function crearCardAnimal(animal) {
   const card = document.createElement('div');
   card.className = 'card h-100 shadow-sm border-0';
 
-  const foto = (animal.ruta_foto && animal.ruta_foto.trim() !== '')
-    ? animal.ruta_foto
-    : 'https://via.placeholder.com/600x400?text=En+adopcion';
+  // --- FOTO ---
+  // Soporta "ruta_foto" o "foto" como nombre de campo
+  const foto =
+    (animal.ruta_foto && animal.ruta_foto.trim() !== '') ? animal.ruta_foto :
+    (animal.foto && animal.foto.trim() !== '') ? animal.foto :
+    'https://via.placeholder.com/600x400?text=En+adopcion';
 
   const img = document.createElement('img');
   img.src = foto;
@@ -31,10 +94,16 @@ function crearCardAnimal(animal) {
   const body = document.createElement('div');
   body.className = 'card-body';
 
+  // --- TÍTULO (nombre) ---
   const title = document.createElement('h5');
   title.className = 'card-title';
   title.textContent = animal.nombre || 'Sin nombre';
 
+  // --- ESPECIE / TIPO ---
+  // Puede venir como:
+  //  - id_tipo (numérico)
+  //  - tipo
+  //  - especie
   let especieTexto = 'Otros';
 
   if (animal.id_tipo) {
@@ -51,10 +120,12 @@ function crearCardAnimal(animal) {
   subtitle.className = 'card-subtitle mb-2 text-muted small';
   subtitle.textContent = raza ? `${especieTexto} · ${raza}` : especieTexto;
 
+  // --- DESCRIPCIÓN ---
   const desc = document.createElement('p');
   desc.className = 'card-text small';
   desc.textContent = animal.descripcion || 'Sin descripción';
 
+  // --- ESTADO DE SALUD (opcional) ---
   const estado = (animal.estado_salud || animal.estado || 'Saludable').trim();
   const badge = document.createElement('span');
   badge.className = 'badge bg-success';
@@ -74,11 +145,11 @@ function crearCardAnimal(animal) {
   btn.textContent = 'Quiero adoptar';
 
   footer.appendChild(btn);
-
   card.appendChild(body);
   card.appendChild(footer);
   col.appendChild(card);
 
+  // Atributo para filtros (Perros / Gatos / Otros)
   const especieLower = especieTexto.toLowerCase();
   let especieFiltro = 'otros';
   if (especieLower.startsWith('perro')) especieFiltro = 'perro';
