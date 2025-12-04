@@ -1,5 +1,5 @@
 <?php
-// BACKEND/Privada/solicitudes_listar.php
+// BACKEND/Privada/solicitudes.php
 session_start();
 
 if (!isset($_SESSION['id_usuario'])) {
@@ -9,8 +9,8 @@ if (!isset($_SESSION['id_usuario'])) {
 
 require_once __DIR__ . '/../DATABASE/conexion.php';
 
-$idRolSesion = (int)($_SESSION['id_rol'] ?? 0);
-$nombreSesion = $_SESSION['nombre'] ?? 'Administrador';
+$idRolSesion   = (int)($_SESSION['id_rol'] ?? 0);
+$nombreSesion  = $_SESSION['nombre'] ?? 'Administrador';
 
 // ================= FUNCIONES AUXILIARES =================
 function estadoTexto($id)
@@ -37,17 +37,10 @@ function estadoBadgeClass($id)
     }
 }
 
-/**
- * Limpia el mensaje para que no salga ENORME:
- * - Quita saltos de línea dobles.
- * - Comprime todos los espacios/blancos a un solo espacio.
- * - Opcional: recorta a X caracteres.
- */
 function resumenMensaje($texto, $max = 160)
 {
     if ($texto === null) return '';
 
-    // Quitar saltos de línea y tabs, dejar todo en un solo "párrafo"
     $limpio = preg_replace('/\s+/', ' ', trim($texto));
 
     if (mb_strlen($limpio) > $max) {
@@ -56,20 +49,20 @@ function resumenMensaje($texto, $max = 160)
     return $limpio;
 }
 
-// ================== MANEJO POST (CAMBIAR ESTADO / ELIMINAR) ==================
 $msg = $_GET['msg'] ?? null;
 $err = $_GET['err'] ?? null;
 
+// ================== POST: CAMBIAR ESTADO / ELIMINAR ==================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = $_POST['accion'] ?? '';
 
     try {
         if ($accion === 'cambiar_estado') {
-            $id = filter_input(INPUT_POST, 'id_solicitud', FILTER_VALIDATE_INT);
+            $id    = filter_input(INPUT_POST, 'id_solicitud', FILTER_VALIDATE_INT);
             $nuevo = filter_input(INPUT_POST, 'id_estado_solicitud', FILTER_VALIDATE_INT);
 
             if (!$id || !$nuevo) {
-                header('Location: solicitudes_listar.php?err=campos');
+                header('Location: solicitudes.php?err=campos');
                 exit;
             }
 
@@ -82,13 +75,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':id'     => $id,
             ]);
 
-            header('Location: solicitudes_listar.php?msg=actualizado');
+            header('Location: solicitudes.php?msg=actualizado');
             exit;
 
         } elseif ($accion === 'eliminar') {
             $id = filter_input(INPUT_POST, 'id_solicitud', FILTER_VALIDATE_INT);
             if (!$id) {
-                header('Location: solicitudes_listar.php?err=sin_id');
+                header('Location: solicitudes.php?err=sin_id');
                 exit;
             }
 
@@ -96,11 +89,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare($sql);
             $stmt->execute([':id' => $id]);
 
-            header('Location: solicitudes_listar.php?msg=eliminado');
+            header('Location: solicitudes.php?msg=eliminado');
             exit;
         }
     } catch (PDOException $e) {
-        header('Location: solicitudes_listar.php?err=bd');
+        header('Location: solicitudes.php?err=bd');
         exit;
     }
 }
@@ -153,12 +146,12 @@ try {
       <ul class="navbar-nav me-auto">
         <li class="nav-item"><a href="dashboard.php" class="nav-link">Dashboard</a></li>
         <li class="nav-item"><a href="animales_listar.php" class="nav-link">Animales</a></li>
-        <li class="nav-item"><a href="solicitudes_listar.php" class="nav-link active">Solicitudes</a></li>
-        <li class="nav-item"><a href="usuarios_admin.php" class="nav-link">Usuarios</a></li>
+        <li class="nav-item"><a href="solicitudes.php" class="nav-link active">Solicitudes</a></li>
+        <li class="nav-item"><a href="usuarios_listar.php" class="nav-link">Usuarios</a></li>
       </ul>
       <div class="d-flex align-items-center">
         <span class="navbar-text me-3">
-          Hola, <?= htmlspecialchars($nombreSesion) ?>
+          Hola, <?= htmlspecialchars($nombreSesion, ENT_QUOTES, 'UTF-8') ?>
         </span>
         <a href="logout.php" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
       </div>
@@ -179,6 +172,8 @@ try {
         <div class="alert alert-success">Estado actualizado correctamente.</div>
       <?php elseif ($msg === 'eliminado'): ?>
         <div class="alert alert-success">Solicitud eliminada correctamente.</div>
+      <?php elseif ($msg === 'datos_actualizados'): ?>
+        <div class="alert alert-success">Datos de la solicitud actualizados correctamente.</div>
       <?php endif; ?>
     <?php endif; ?>
 
@@ -189,7 +184,7 @@ try {
             case 'campos':   echo 'Por favor selecciona un estado válido.'; break;
             case 'sin_id':   echo 'No se recibió el ID de la solicitud.'; break;
             case 'bd':       echo 'Ocurrió un error al guardar en la base de datos.'; break;
-            default:         echo htmlspecialchars($err);
+            default:         echo htmlspecialchars($err, ENT_QUOTES, 'UTF-8');
         }
         ?>
       </div>
@@ -216,25 +211,25 @@ try {
           <tbody>
           <?php foreach ($solicitudes as $s): ?>
             <?php
-              $id   = (int)$s['id_solicitud'];
-              $msgCorto = resumenMensaje($s['mensaje']);   // 👈 aquí se limpia el texto largo
+              $id         = (int)$s['id_solicitud'];
+              $msgCorto   = resumenMensaje($s['mensaje']);
               $claseBadge = estadoBadgeClass($s['id_estado_solicitud']);
             ?>
             <tr>
               <td><?= $id ?></td>
-              <td><?= htmlspecialchars($s['fecha_solicitud']) ?></td>
+              <td><?= htmlspecialchars($s['fecha_solicitud'], ENT_QUOTES, 'UTF-8') ?></td>
               <td>
                 #<?= (int)$s['id_animal'] ?> - 
-                <?= htmlspecialchars($s['nombre_animal']) ?>
+                <?= htmlspecialchars($s['nombre_animal'], ENT_QUOTES, 'UTF-8') ?>
               </td>
               <td style="max-width: 420px;">
                 <span class="d-block">
-                  <?= htmlspecialchars($msgCorto) ?>
+                  <?= htmlspecialchars($msgCorto, ENT_QUOTES, 'UTF-8') ?>
                 </span>
               </td>
               <td>
                 <span class="badge <?= $claseBadge ?>">
-                  <?= htmlspecialchars(estadoTexto($s['id_estado_solicitud'])) ?>
+                  <?= htmlspecialchars(estadoTexto($s['id_estado_solicitud']), ENT_QUOTES, 'UTF-8') ?>
                 </span>
               </td>
               <td>
@@ -255,8 +250,8 @@ try {
                   </button>
                 </form>
               </td>
-              <td>
-                <form method="post" onsubmit="return confirm('¿Eliminar esta solicitud?');">
+              <td class="text-nowrap">
+                <form method="post" onsubmit="return confirm('¿Eliminar esta solicitud?');" class="d-inline">
                   <input type="hidden" name="accion" value="eliminar">
                   <input type="hidden" name="id_solicitud" value="<?= $id ?>">
                   <button type="submit" class="btn btn-sm btn-danger">
@@ -279,7 +274,6 @@ try {
     <small>&copy; <?= date('Y') ?> AdoptaConAmor · Panel administrador</small>
   </div>
 </footer>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -10,6 +10,7 @@ if (!isset($_SESSION['id_usuario'])) {
 $rolSesion    = $_SESSION['rol']    ?? 'usuario';
 $nombreSesion = $_SESSION['nombre'] ?? 'Usuario';
 
+// Solo admins pueden ver esta lista
 if ($rolSesion !== 'admin') {
     header('Location: panel_usuario.php');
     exit;
@@ -37,6 +38,7 @@ try {
     <meta charset="UTF-8">
     <title>Usuarios - AdoptaConAmor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet"
@@ -44,7 +46,8 @@ try {
     <link rel="stylesheet" href="/FRONTEND/CSS/index.css">
     <link rel="stylesheet" href="/FRONTEND/CSS/dashboard.css">
 </head>
-<body class="dashboard-bg">
+<body class="dashboard-bg d-flex flex-column min-vh-100">
+
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar dashboard-navbar">
   <div class="container">
     <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="dashboard.php">
@@ -63,7 +66,8 @@ try {
   </div>
 </nav>
 
-<div class="container py-4">
+<main class="flex-grow-1">
+  <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h4 mb-0">Usuarios del panel</h1>
         <a href="dashboard.php" class="btn btn-sm btn-secondary">
@@ -98,16 +102,16 @@ try {
                             <td><?php echo (int)$u['id_usuario']; ?></td>
                             <td><?php echo htmlspecialchars($u['nombre'], ENT_QUOTES, 'UTF-8'); ?></td>
                             <td><?php echo htmlspecialchars($u['correo'], ENT_QUOTES, 'UTF-8'); ?></td>
-                            <td>
-                                <?php echo htmlspecialchars($u['rol'] ?? 'usuario', ENT_QUOTES, 'UTF-8'); ?>
-                            </td>
+                            <td><?php echo htmlspecialchars($u['rol'] ?? 'usuario', ENT_QUOTES, 'UTF-8'); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
     <?php endif; ?>
-</div>
+  </div>
+</main>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
