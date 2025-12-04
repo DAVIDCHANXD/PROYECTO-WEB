@@ -6,14 +6,10 @@ if (!isset($_SESSION['id_usuario'])) {
     header('Location: login.php');
     exit;
 }
-
 $nombreSesion = $_SESSION['nombre'] ?? 'Usuario';
-
 require_once __DIR__ . '/../DATABASE/conexion.php';
-
 $animales = [];
 $error = null;
-
 try {
     $sql = "SELECT 
                 a.id_animal,
@@ -115,10 +111,7 @@ function estadoSaludTexto($idEstado) {
     </div>
   </div>
 </nav>
-
 <main class="flex-grow-1 animales-main">
-
-  <!-- HERO DE ANIMALES (PRIVADO) -->
   <section class="animales-hero">
     <div class="container">
       <h1 class="mb-2">Catálogo de animales</h1>
@@ -128,17 +121,13 @@ function estadoSaludTexto($idEstado) {
       </p>
     </div>
   </section>
-
-  <!-- LISTA DE TARJETAS -->
   <section class="py-4">
     <div class="container">
-
       <?php if ($error): ?>
         <div class="alert alert-danger">
           <?= htmlspecialchars($error) ?>
         </div>
       <?php endif; ?>
-
       <?php if (empty($animales)): ?>
         <div class="alert alert-info">
           Por el momento no hay animales disponibles para adopción.
@@ -163,17 +152,14 @@ function estadoSaludTexto($idEstado) {
                     <?= htmlspecialchars(tamanoTexto($a['id_tamano'])) ?> ·
                     <?= (int)$a['edad_anios'] ?> años
                   </p>
-
                   <?php if ($adoptado): ?>
                     <span class="badge bg-secondary mb-2">Ya adoptado</span>
                   <?php else: ?>
                     <span class="badge bg-success mb-2">Disponible</span>
                   <?php endif; ?>
-
                   <p class="card-text small flex-grow-1">
                     <?= htmlspecialchars($a['descripcion'] ?: 'Sin descripción adicional.') ?>
                   </p>
-
                   <div class="mt-auto d-flex gap-2">
                     <button
                       type="button"
@@ -189,10 +175,8 @@ function estadoSaludTexto($idEstado) {
                       data-salud="<?= htmlspecialchars(estadoSaludTexto($a['id_estado_salud'])) ?>"
                       data-descripcion="<?= htmlspecialchars($a['descripcion'] ?? '') ?>"
                       data-foto="<?= htmlspecialchars($foto) ?>"
-                    >
-                      Más información
+                    > Más información
                     </button>
-
                     <?php if (!$adoptado): ?>
                       <a href="/BACKEND/Privada/panel_usuario.php?id_animal=<?= (int)$a['id_animal'] ?>"
                          class="btn btn-success btn-sm">
@@ -206,12 +190,9 @@ function estadoSaludTexto($idEstado) {
           <?php endforeach; ?>
         </div>
       <?php endif; ?>
-
     </div>
   </section>
 </main>
-
-<!-- MODAL DETALLE ANIMAL -->
 <div class="modal fade" id="modalAnimal" tabindex="-1" aria-labelledby="modalAnimalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
@@ -241,27 +222,21 @@ function estadoSaludTexto($idEstado) {
         </div>
       </div>
       <div class="modal-footer">
-        <!-- Nota: el botón de adoptar solo sirve como recordatorio visual; el flujo principal es la card -->
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>
 </div>
-
 <footer class="text-white text-center py-3 mt-auto site-footer">
   <div class="container">
     <small>&copy; <?= date('Y') ?> AdoptaConAmor · Proyecto final</small>
   </div>
 </footer>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
-// JS para llenar el modal con la info del animal
 document.addEventListener('click', function (event) {
   const btn = event.target.closest('.btn-mas-info');
   if (!btn) return;
-
   const nombre = btn.dataset.nombre || '';
   const tipo   = btn.dataset.tipo || '';
   const tamano = btn.dataset.tamano || '';
@@ -270,7 +245,6 @@ document.addEventListener('click', function (event) {
   const salud  = btn.dataset.salud || '';
   const desc   = btn.dataset.descripcion || '';
   const foto   = btn.dataset.foto || '';
-
   document.getElementById('modalAnimalNombre').textContent = nombre;
   document.getElementById('modalAnimalTipo').textContent = tipo;
   document.getElementById('modalAnimalTamano').textContent = tamano;
@@ -279,12 +253,10 @@ document.addEventListener('click', function (event) {
   document.getElementById('modalAnimalSalud').textContent = salud;
   document.getElementById('modalAnimalDescripcion').textContent =
       desc !== '' ? desc : 'Sin descripción adicional.';
-
   const img = document.getElementById('modalAnimalImg');
   img.src = foto;
   img.alt = 'Foto de ' + nombre;
 });
 </script>
-
 </body>
 </html>

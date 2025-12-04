@@ -10,7 +10,6 @@ if (!isset($_SESSION['id_usuario'])) {
 $rolSesion    = $_SESSION['rol']    ?? 'usuario';
 $nombreSesion = $_SESSION['nombre'] ?? 'Usuario';
 
-// Solo admins pueden ver esta lista
 if ($rolSesion !== 'admin') {
     header('Location: panel_usuario.php');
     exit;

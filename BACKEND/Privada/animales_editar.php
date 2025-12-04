@@ -12,8 +12,6 @@ require_once __DIR__ . '/../DATABASE/conexion.php';
 $errores = [];
 $animal = null;
 $url_imagen = '';
-
-// Obtenemos el ID (GET o POST)
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if ($id === null || $id === false) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
@@ -25,7 +23,6 @@ if (!$id) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Datos desde el formulario
     $nombre          = trim($_POST['nombre'] ?? '');
     $id_tipo         = trim($_POST['id_tipo'] ?? '');
     $id_tamano       = trim($_POST['id_tamano'] ?? '');
@@ -36,8 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $url_imagen      = trim($_POST['url_imagen'] ?? '');
     $adoptado        = isset($_POST['adoptado']) ? 1 : 0;
     $visible         = isset($_POST['visible']) ? 1 : 0;
-
-    // Validaciones
     if ($nombre === '') {
         $errores[] = 'El nombre es obligatorio.';
     }
@@ -56,12 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($id_estado_salud === '' || !ctype_digit($id_estado_salud)) {
         $errores[] = 'Selecciona un estado de salud válido.';
     }
-
     if (empty($errores)) {
         try {
             $pdo->beginTransaction();
-
-            // Actualizamos el animal
             $sql = "UPDATE animales
                     SET nombre = :nombre,
                         id_tipo = :id_tipo,
@@ -86,10 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':visible'         => $visible,
                 ':id'              => $id,
             ]);
-
-            // Manejo de la foto principal
             if ($url_imagen !== '') {
-                // ¿Ya existe una foto principal?
                 $sqlFotoSel = "SELECT id_foto FROM fotos_animal 
                                WHERE id_animal = :id_animal AND es_principal = 1
                                LIMIT 1";
@@ -98,7 +87,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $foto = $stmtSel->fetch(PDO::FETCH_ASSOC);
 
                 if ($foto) {
-                    // Actualizar URL
                     $sqlFotoUpd = "UPDATE fotos_animal 
                                    SET url = :url 
                                    WHERE id_foto = :id_foto";
@@ -108,7 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':id_foto' => $foto['id_foto'],
                     ]);
                 } else {
-                    // Crear nueva como principal
                     $sqlFotoIns = "INSERT INTO fotos_animal (id_animal, url, es_principal)
                                    VALUES (:id_animal, :url, 1)";
                     $stmtIns = $pdo->prepare($sqlFotoIns);
@@ -118,7 +105,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ]);
                 }
             }
-            // Si la URL viene vacía NO borramos nada, solo dejamos la que ya exista.
 
             $pdo->commit();
 
@@ -132,7 +118,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Para que el formulario recuerde datos si hubo errores
     $animal = [
         'id_animal'       => $id,
         'nombre'          => $nombre,
@@ -146,7 +131,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'visible'         => $visible,
     ];
 } else {
-    // GET: cargamos datos actuales
     try {
         $stmt = $pdo->prepare("SELECT * FROM animales WHERE id_animal = :id");
         $stmt->execute([':id' => $id]);
@@ -157,7 +141,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Obtenemos la foto principal (si existe)
         $sqlFotoSel = "SELECT url FROM fotos_animal 
                        WHERE id_animal = :id_animal AND es_principal = 1
                        LIMIT 1";
@@ -191,7 +174,6 @@ function checked($valor) {
 
 <div class="container py-4">
     <h1 class="mb-4">Editar animal</h1>
-
     <?php if (!empty($errores)): ?>
         <div class="alert alert-danger">
             <ul class="mb-0">
@@ -201,11 +183,9 @@ function checked($valor) {
             </ul>
         </div>
     <?php endif; ?>
-
     <?php if ($animal): ?>
         <form method="post">
             <input type="hidden" name="id" value="<?= (int)$animal['id_animal'] ?>">
-
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre *</label>
                 <input type="text"
@@ -215,7 +195,6 @@ function checked($valor) {
                        value="<?= htmlspecialchars($animal['nombre'] ?? '') ?>"
                        required>
             </div>
-
             <div class="mb-3">
                 <label for="id_tipo" class="form-label">Tipo de animal *</label>
                 <select class="form-select" id="id_tipo" name="id_tipo" required>
@@ -227,7 +206,6 @@ function checked($valor) {
                     <option value="7" <?= selected($animal['id_tipo'], 7) ?>>Pez</option>
                 </select>
             </div>
-
             <div class="mb-3">
                 <label for="id_tamano" class="form-label">Tamaño *</label>
                 <select class="form-select" id="id_tamano" name="id_tamano" required>
@@ -238,7 +216,6 @@ function checked($valor) {
                     <option value="4" <?= selected($animal['id_tamano'], 4) ?>>Grande</option>
                 </select>
             </div>
-
             <div class="mb-3">
                 <label for="edad_anios" class="form-label">Edad (años) *</label>
                 <input type="number"
@@ -249,7 +226,6 @@ function checked($valor) {
                        value="<?= htmlspecialchars($animal['edad_anios'] ?? '') ?>"
                        required>
             </div>
-
             <div class="mb-3">
                 <label for="sexo" class="form-label">Sexo *</label>
                 <select class="form-select" id="sexo" name="sexo" required>
@@ -258,7 +234,6 @@ function checked($valor) {
                     <option value="Hembra" <?= selected($animal['sexo'], 'Hembra') ?>>Hembra</option>
                 </select>
             </div>
-
             <div class="mb-3">
                 <label for="id_estado_salud" class="form-label">Estado de salud *</label>
                 <select class="form-select" id="id_estado_salud" name="id_estado_salud" required>
@@ -272,7 +247,6 @@ function checked($valor) {
                     <option value="7" <?= selected($animal['id_estado_salud'], 7) ?>>Otro / Revisar</option>
                 </select>
             </div>
-
             <div class="mb-3">
                 <label for="descripcion" class="form-label">Descripción</label>
                 <textarea class="form-control"
@@ -280,7 +254,6 @@ function checked($valor) {
                           name="descripcion"
                           rows="3"><?= htmlspecialchars($animal['descripcion'] ?? '') ?></textarea>
             </div>
-
             <div class="mb-3">
                 <label for="url_imagen" class="form-label">URL de imagen principal (opcional)</label>
                 <input type="url"
@@ -290,7 +263,6 @@ function checked($valor) {
                        placeholder="https://ejemplo.com/mi-mascota.jpg"
                        value="<?= htmlspecialchars($url_imagen) ?>">
             </div>
-
             <div class="mb-3 form-check">
                 <input type="checkbox"
                        class="form-check-input"
@@ -299,7 +271,6 @@ function checked($valor) {
                        value="1" <?= checked($animal['adoptado'] ?? 0) ?>>
                 <label class="form-check-label" for="adoptado">Marcar como ya adoptado</label>
             </div>
-
             <div class="mb-3 form-check">
                 <input type="checkbox"
                        class="form-check-input"
@@ -308,7 +279,6 @@ function checked($valor) {
                        value="1" <?= checked($animal['visible'] ?? 1) ?>>
                 <label class="form-check-label" for="visible">Visible en la parte pública</label>
             </div>
-
             <button type="submit" class="btn btn-primary">Guardar cambios</button>
             <a href="animales_listar.php" class="btn btn-secondary">Cancelar</a>
         </form>
@@ -317,6 +287,5 @@ function checked($valor) {
         <a href="animales_listar.php" class="btn btn-secondary">Volver</a>
     <?php endif; ?>
 </div>
-
 </body>
 </html>

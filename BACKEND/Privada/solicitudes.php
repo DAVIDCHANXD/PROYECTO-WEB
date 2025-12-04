@@ -6,9 +6,7 @@ if (!isset($_SESSION['id_usuario'])) {
     header('Location: login.php');
     exit;
 }
-
 require_once __DIR__ . '/../DATABASE/conexion.php';
-
 $idRolSesion   = (int)($_SESSION['id_rol'] ?? 0);
 $nombreSesion  = $_SESSION['nombre'] ?? 'Administrador';
 function estadoTexto($id)
@@ -48,17 +46,14 @@ $msg = $_GET['msg'] ?? null;
 $err = $_GET['err'] ?? null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = $_POST['accion'] ?? '';
-
     try {
         if ($accion === 'cambiar_estado') {
             $id    = filter_input(INPUT_POST, 'id_solicitud', FILTER_VALIDATE_INT);
             $nuevo = filter_input(INPUT_POST, 'id_estado_solicitud', FILTER_VALIDATE_INT);
-
             if (!$id || !$nuevo) {
                 header('Location: solicitudes.php?err=campos');
                 exit;
             }
-
             $sql = "UPDATE solicitudes_adopcion
                     SET id_estado_solicitud = :estado
                     WHERE id_solicitud = :id";
@@ -67,17 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':estado' => $nuevo,
                 ':id'     => $id,
             ]);
-
             header('Location: solicitudes.php?msg=actualizado');
             exit;
-
         } elseif ($accion === 'eliminar') {
             $id = filter_input(INPUT_POST, 'id_solicitud', FILTER_VALIDATE_INT);
             if (!$id) {
                 header('Location: solicitudes.php?err=sin_id');
                 exit;
             }
-
             $sql = "DELETE FROM solicitudes_adopcion WHERE id_solicitud = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([':id' => $id]);

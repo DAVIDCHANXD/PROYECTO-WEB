@@ -35,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ok = false;
             $mensajeError = 'Ocurrió un error al guardar los cambios.';
         }
-
         if ($ok) {
             $_SESSION['nombre'] = $nombre;
             header('Location: dashboard.php?perfil=1');
@@ -48,7 +47,6 @@ try {
     $sqlDatos = 'SELECT nombre, email, telefono 
                 FROM usuarios 
                 WHERE id_usuario = :id';
-
     $stmtDatos = $pdo->prepare($sqlDatos);
     $stmtDatos->execute([':id' => $idUsuario]);
     $usuario = $stmtDatos->fetch(PDO::FETCH_ASSOC);
@@ -62,7 +60,6 @@ if (!$usuario) {
     header('Location: login.php');
     exit;
 }
-
 $nombreUsuario = $usuario['nombre'] ?? 'Usuario';
 $inicial       = strtoupper(substr($nombreUsuario, 0, 1));
 ?>

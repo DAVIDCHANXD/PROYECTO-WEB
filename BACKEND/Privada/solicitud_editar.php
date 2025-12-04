@@ -1,24 +1,19 @@
 <?php
 // BACKEND/Privada/solicitud_editar.php
 session_start();
-
 if (!isset($_SESSION['id_usuario'])) {
     header('Location: login.php');
     exit;
 }
-
 require_once __DIR__ . '/../DATABASE/conexion.php';
-
 $nombreSesion = $_SESSION['nombre'] ?? 'Administrador';
 $idSolicitud = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if (!$idSolicitud) {
     header('Location: solicitudes_listar.php?err=sin_id');
     exit;
 }
-
 $error = null;
 $solicitud = null;
-
 try {
     $sql = "SELECT 
                 s.*,
@@ -37,13 +32,11 @@ try {
 } catch (PDOException $e) {
     $error = 'Error al cargar la solicitud: ' . $e->getMessage();
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
     $nombre   = trim($_POST['nombre_solicitante']  ?? '');
     $correo   = trim($_POST['correo_solicitante']  ?? '');
     $telefono = trim($_POST['telefono']            ?? '');
     $mensaje  = trim($_POST['mensaje']             ?? '');
-
     if ($nombre === '' || $correo === '' || $telefono === '' || $mensaje === '') {
         $error = 'Por favor completa todos los campos obligatorios.';
         $solicitud['nombre_solicitante'] = $nombre;
@@ -52,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
         $solicitud['mensaje']            = $mensaje;
     } elseif (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
         $error = 'El correo electrónico no tiene un formato válido.';
-
         $solicitud['nombre_solicitante'] = $nombre;
         $solicitud['correo_solicitante'] = $correo;
         $solicitud['telefono']           = $telefono;
@@ -87,7 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
     <meta charset="UTF-8">
     <title>Editar solicitud #<?= htmlspecialchars($idSolicitud) ?> - AdoptaConAmor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/FRONTEND/CSS/index.css">
@@ -209,7 +200,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
         </form>
       </div>
     </div>
-
   </div>
 </main>
 <footer class="text-white text-center py-3 mt-auto site-footer">

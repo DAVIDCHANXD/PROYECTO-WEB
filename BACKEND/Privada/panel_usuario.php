@@ -6,7 +6,6 @@ if (!isset($_SESSION['id_usuario'])) {
     header('Location: login.php');
     exit;
 }
-
 $nombreSesion = $_SESSION['nombre'] ?? 'Usuario';
 $emailSesion  = $_SESSION['email']  ?? '';
 $idUsuario    = (int)($_SESSION['id_usuario'] ?? 0);
@@ -17,9 +16,6 @@ $ok        = isset($_GET['ok']);
 $error     = isset($_GET['error']);
 $idAnimalSeleccionado = filter_input(INPUT_GET, 'id_animal', FILTER_VALIDATE_INT);
 
-// =======================
-// Animales disponibles
-// =======================
 $animales = [];
 try {
     $sqlAnimales = "SELECT id_animal, nombre, id_tipo, edad_anios
@@ -29,12 +25,8 @@ try {
     $stmtA = $pdo->query($sqlAnimales);
     $animales = $stmtA->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    // Puedes depurar si quieres: var_dump($e->getMessage());
 }
 
-// =======================
-// Solicitudes del usuario
-// =======================
 $solicitudes = [];
 try {
     $sql = "SELECT 
@@ -50,7 +42,6 @@ try {
     $stmt->execute([':id' => $idUsuario]);
     $solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    // Depuración opcional
 }
 
 function estadoTexto($id)
@@ -89,7 +80,6 @@ function tipoTexto($idTipo) {
     <link rel="stylesheet" href="/FRONTEND/CSS/dashboard.css">
 </head>
 <body class="dashboard-bg">
-
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar dashboard-navbar">
   <div class="container">
     <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="/index.html">
@@ -105,7 +95,6 @@ function tipoTexto($idTipo) {
     </div>
   </div>
 </nav>
-
 <div class="container py-4">
     <div class="mb-4">
         <h1 class="h4 mb-1">Mi panel de adopción</h1>
@@ -123,8 +112,6 @@ function tipoTexto($idTipo) {
             Ocurrió un error al enviar tu solicitud. Revisa los datos e inténtalo de nuevo.
         </div>
     <?php endif; ?>
-
-    <!-- Tarjetas rápidas -->
     <div class="row g-4 mb-4">
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-section-card">
@@ -140,9 +127,7 @@ function tipoTexto($idTipo) {
             </div>
         </div>
     </div>
-    <!-- FORMULARIO INTERNO + LISTA DE SOLICITUDES -->
     <div class="row g-4">
-        <!-- Formulario interna de solicitud -->
         <div class="col-lg-6">
             <div class="card border-0 dashboard-section-card h-100">
                 <div class="card-body">
@@ -156,9 +141,7 @@ function tipoTexto($idTipo) {
                         </div>
                     <?php else: ?>
                         <form method="post" action="solicitud_guardar.php" class="row g-3">
-                            <!-- importante: para que al terminar regrese a este panel -->
                             <input type="hidden" name="redirect" value="/BACKEND/Privada/panel_usuario.php">
-
                             <div class="col-12">
                                 <label for="id_animal" class="form-label">Mascota *</label>
                                 <select class="form-select" id="id_animal" name="id_animal" required>
@@ -221,7 +204,6 @@ function tipoTexto($idTipo) {
                 </div>
             </div>
         </div>
-        <!-- Tabla de solicitudes del usuario -->
         <div class="col-lg-6">
             <div class="card border-0 dashboard-section-card h-100">
                 <div class="card-body">

@@ -17,7 +17,6 @@ if (ini_get('session.use_cookies')) {
     );
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>

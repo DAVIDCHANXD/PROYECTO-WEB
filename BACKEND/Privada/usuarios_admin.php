@@ -11,7 +11,6 @@ require_once __DIR__ . '/../DATABASE/conexion.php';
 
 $idRolSesion = (int)($_SESSION['id_rol'] ?? 0);
 $rolesAdmin = [1, 2, 3, 4, 7, 8, 9, 10]; // mismos que usamos en login
-
 if (!in_array($idRolSesion, $rolesAdmin, true)) {
     header('Location: panel_usuario.php');
     exit;
@@ -41,7 +40,6 @@ $err  = $_GET['err']  ?? null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = $_POST['accion'] ?? '';
-
     try {
         if ($accion === 'crear') {
             $nombre   = trim($_POST['nombre'] ?? '');
@@ -49,14 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $password = $_POST['password'] ?? '';
             $rol      = (int)($_POST['id_rol'] ?? 5);
             $activo   = isset($_POST['activo']) ? 1 : 0;
-
             if ($nombre === '' || $email === '' || $password === '') {
                 header('Location: usuarios_admin.php?err=campos');
                 exit;
             }
-
             $hash = password_hash($password, PASSWORD_DEFAULT);
-
             $sql = "INSERT INTO usuarios (nombre, email, password_hash, id_rol, activo)
                     VALUES (:nombre, :email, :hash, :id_rol, :activo)";
             $stmt = $pdo->prepare($sql);
@@ -172,7 +167,6 @@ try {
     <link rel="stylesheet" href="/FRONTEND/CSS/dashboard.css">
 </head>
 <body class="dashboard-bg d-flex flex-column min-vh-100">
-
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar dashboard-navbar">
   <div class="container">
     <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="dashboard.php">
@@ -249,7 +243,6 @@ try {
         ?>
       </div>
     <?php endif; ?>
-    <!-- Tabla -->
     <?php if (empty($usuarios)): ?>
       <div class="alert alert-info">No hay usuarios registrados aún.</div>
     <?php else: ?>

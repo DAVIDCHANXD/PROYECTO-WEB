@@ -5,7 +5,6 @@ require_once __DIR__ . '/../DATABASE/conexion.php';
 
 $errores = '';
 $exito   = '';
-
 $nombre   = '';
 $apellido = '';
 $email    = '';
@@ -30,19 +29,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errores = 'La contraseña debe tener al menos 6 caracteres.';
     } else {
         try {
-            // Verificar que el correo no exista
             $stmt = $pdo->prepare('SELECT COUNT(*) FROM usuarios WHERE email = :email');
             $stmt->execute([':email' => $email]);
 
             if ($stmt->fetchColumn() > 0) {
                 $errores = 'Ya existe una cuenta con ese correo.';
             } else {
-                // Buscar el rol de "adoptante" en la tabla roles
                 $stmtRol = $pdo->prepare('SELECT id_rol FROM roles WHERE nombre = :rol');
                 $stmtRol->execute([':rol' => 'adoptante']);
                 $idRol = $stmtRol->fetchColumn();
-
-                // Si no se encuentra, rol por defecto (por ejemplo 5 = adoptante)
                 if (!$idRol) {
                     $idRol = 5;
                 }
