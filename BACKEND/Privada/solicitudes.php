@@ -146,7 +146,6 @@ try {
       <ul class="navbar-nav me-auto">
         <li class="nav-item"><a href="dashboard.php" class="nav-link">Dashboard</a></li>
         <li class="nav-item"><a href="animales_listar.php" class="nav-link">Animales</a></li>
-        <li class="nav-item"><a href="solicitudes.php" class="nav-link active">Solicitudes</a></li>
         <li class="nav-item"><a href="usuarios_listar.php" class="nav-link">Usuarios</a></li>
       </ul>
       <div class="d-flex align-items-center">
