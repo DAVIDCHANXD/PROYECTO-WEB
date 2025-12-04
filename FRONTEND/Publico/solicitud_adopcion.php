@@ -7,14 +7,11 @@ require_once __DIR__ . '/../../BACKEND/DATABASE/conexion.php';
 $mensajeOk    = isset($_GET['ok']);
 $mensajeError = isset($_GET['error']);
 
-// Datos de sesión (por si el usuario está logueado)
 $nombreSesion = $_SESSION['nombre'] ?? '';
 $emailSesion  = $_SESSION['email']  ?? '';
 
-// Si viene id_animal por GET (desde botón "Adoptar" de la ficha)
 $idAnimalSeleccionado = filter_input(INPUT_GET, 'id_animal', FILTER_VALIDATE_INT);
 
-// Obtener animales disponibles para el select y el catálogo
 $animales = [];
 try {
     $sql = "SELECT 
@@ -36,7 +33,6 @@ try {
     $animales = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     // Podrías mostrar un mensaje si quieres
-    // $error = 'Error al obtener animales: ' . $e->getMessage();
 }
 
 function tipoTexto($idTipo) {
@@ -56,16 +52,15 @@ function tipoTexto($idTipo) {
     <meta charset="UTF-8">
     <title>Solicitud de adopción - AdoptaConAmor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/FRONTEND/CSS/index.css">
+    <link rel="stylesheet" href="/FRONTEND/CSS/solicitud_adopcion.css">
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
-
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar">
   <div class="container">
-    <a class="navbar-brand fw-bold" href="/index.php">
+    <a class="navbar-brand fw-bold" href="/index.html">
       <span class="logo-pill">AC</span> AdoptaConAmor
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -74,29 +69,34 @@ function tipoTexto($idTipo) {
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto align-items-lg-center">
-        <li class="nav-item"><a href="/index.html" class="nav-link">Inicio</a></li>
-        <li class="nav-item"><a href="/FRONTEND/Publico/animales.php" class="nav-link">Animales</a></li>
-        <li class="nav-item"><a href="/FRONTEND/Publico/como-adoptar.php" class="nav-link">Cómo adoptar</a></li>
-        <li class="nav-item"><a href="/FRONTEND/Publico/solicitud_adopcion.php" class="nav-link active">Solicitud de adopción</a></li>
-        <li class="nav-item"><a href="/FRONTEND/Publico/contacto.php" class="nav-link">Contacto</a></li>
+        <li class="nav-item"><a class="nav-link" href="/index.html">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/animales.php">Animales</a></li>
+        <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/como-adoptar.php">Cómo adoptar</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/FRONTEND/Publico/solicitud_adopcion.php">Solicitud de adopción</a></li>
+        <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/contacto.php">Contacto</a></li>
         <li class="nav-item ms-lg-3">
           <a class="btn btn-outline-light btn-sm" href="/BACKEND/Privada/login.php">
             Iniciar sesión
+          </a>
+        </li>
+        <li class="nav-item ms-lg-3">
+          <a class="btn btn-outline-light btn-sm" href="/BACKEND/Privada/register.php">
+            Registrase
           </a>
         </li>
       </ul>
     </div>
   </div>
 </nav>
-
-<main class="flex-grow-1">
-<div class="container py-4">
-    <h1 class="mb-3">Solicitud de adopción</h1>
-    <p class="text-muted">
+<main class="flex-grow-1 solicitud-main">
+  <div class="container py-5">
+    <div class="solicitud-header mb-4">
+      <h1 class="mb-2">Solicitud de adopción</h1>
+      <p class="text-muted">
         Completa el siguiente formulario para solicitar la adopción de una mascota.
         Un administrador revisará tu solicitud y se pondrá en contacto contigo.
-    </p>
-
+      </p>
+    </div>
     <?php if ($mensajeOk): ?>
         <div class="alert alert-success">
             ¡Gracias! Tu solicitud se ha enviado correctamente. Pronto nos pondremos en contacto contigo.
@@ -106,12 +106,9 @@ function tipoTexto($idTipo) {
             Ocurrió un error al enviar tu solicitud. Inténtalo más tarde.
         </div>
     <?php endif; ?>
-
-    <!-- FORMULARIO -->
-    <form method="post" action="/BACKEND/Privada/solicitud_guardar.php" class="mt-3">
-        <!-- Para que solicitud_guardar.php regrese a esta misma página -->
+    <form method="post" action="/BACKEND/Privada/solicitud_guardar.php"
+          class="mt-3 solicitud-form">
         <input type="hidden" name="redirect" value="/FRONTEND/Publico/solicitud_adopcion.php">
-
         <div class="row g-3">
             <div class="col-md-6">
                 <label for="nombre_completo" class="form-label">Nombre completo *</label>
@@ -119,20 +116,17 @@ function tipoTexto($idTipo) {
                        name="nombre_completo" required
                        value="<?= htmlspecialchars($nombreSesion) ?>">
             </div>
-
             <div class="col-md-6">
                 <label for="correo" class="form-label">Correo electrónico *</label>
                 <input type="email" class="form-control" id="correo"
                        name="correo" required
                        value="<?= htmlspecialchars($emailSesion) ?>">
             </div>
-
             <div class="col-md-6">
                 <label for="telefono" class="form-label">Teléfono *</label>
                 <input type="tel" class="form-control" id="telefono"
                        name="telefono" required>
             </div>
-
             <div class="col-md-6">
                 <label for="id_animal" class="form-label">Mascota que deseas adoptar *</label>
                 <select class="form-select" id="id_animal" name="id_animal" required>
@@ -148,7 +142,6 @@ function tipoTexto($idTipo) {
                     También puedes elegir la mascota desde el catálogo de abajo.
                 </div>
             </div>
-
             <div class="col-12">
                 <label for="mensaje" class="form-label">
                     Cuéntanos por qué quieres adoptar y cómo cuidarás a la mascota *
@@ -157,20 +150,15 @@ function tipoTexto($idTipo) {
                           rows="4" required></textarea>
             </div>
         </div>
-
         <button type="submit" class="btn btn-primary mt-3">
             Enviar solicitud
         </button>
     </form>
-
-    <!-- CATÁLOGO DE ANIMALES (MISMA BD) -->
     <hr class="my-5">
-
-    <h2 class="h5 mb-3">Catálogo de animales disponibles</h2>
+    <h2 class="h5 mb-3 solicitud-catalogo-titulo">Catálogo de animales disponibles</h2>
     <p class="text-muted">
         Da clic en <strong>Elegir esta mascota</strong> para rellenar el formulario con ese animal.
     </p>
-
     <?php if (empty($animales)): ?>
         <div class="alert alert-info">
             Por el momento no hay animales disponibles para adopción.
@@ -182,7 +170,7 @@ function tipoTexto($idTipo) {
                     $foto = $a['foto_url'] ?: '/FRONTEND/IMG/sin-foto.png';
                 ?>
                 <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
+                    <div class="card h-100 shadow-sm solicitud-animal-card">
                         <img src="<?= htmlspecialchars($foto) ?>"
                              class="card-img-top"
                              alt="Foto de <?= htmlspecialchars($a['nombre']) ?>"
@@ -212,31 +200,22 @@ function tipoTexto($idTipo) {
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
-
-</div>
+  </div>
 </main>
-
 <footer class="bg-dark text-light py-3 mt-auto">
   <div class="container text-center small">
     &copy; <?= date('Y') ?> AdoptaConAmor - Todos los derechos reservados.
   </div>
 </footer>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
-// Cuando el usuario da clic en "Elegir esta mascota", ponemos ese id en el select
 document.addEventListener('click', function (ev) {
     const btn = ev.target.closest('.elegir-animal');
     if (!btn) return;
-
     const id = btn.dataset.id;
     const select = document.getElementById('id_animal');
     if (!select) return;
-
     select.value = id;
-
-    // Hacemos un pequeño scroll hacia el formulario para que se note
     select.scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
 </script>

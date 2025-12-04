@@ -190,7 +190,7 @@ try {
 
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar dashboard-navbar">
   <div class="container">
-    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="dashboard.php">
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="/BACKEND/Privada/dashboard.php">
       <span class="logo-pill">AC</span>
       <span>Panel administrador</span>
     </a>
@@ -200,10 +200,10 @@ try {
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto">
-        <li class="nav-item"><a href="dashboard.php" class="nav-link">Dashboard</a></li>
-        <li class="nav-item"><a href="animales_listar.php" class="nav-link">Animales</a></li>
-        <li class="nav-item"><a href="solicitudes_listar.php" class="nav-link">Solicitudes</a></li>
-        <li class="nav-item"><a href="usuarios_admin.php" class="nav-link active">Usuarios</a></li>
+        <li class="nav-item"><a href="/BACKEND/Privada/dashboard.php" class="nav-link">Dashboard</a></li>
+        <li class="nav-item"><a href="/BACKEND/Privada/animales_listar.php" class="nav-link">Animales</a></li>
+        <li class="nav-item"><a href="/BACKEND/Privada/usuarios_listar.php" class="nav-link">Solicitudes</a></li>
+        <li class="nav-item"><a href="/BACKEND/Privada/usuarios_admin.php" class="nav-link active">Usuarios</a></li>
       </ul>
       <div class="d-flex align-items-center">
         <span class="navbar-text me-3">

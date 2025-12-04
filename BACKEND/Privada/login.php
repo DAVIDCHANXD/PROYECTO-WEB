@@ -91,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body class="d-flex flex-column min-vh-100 auth-bg">
+<!-- NAVBAR (MISMO QUE index.html) -->
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar">
   <div class="container">
     <a class="navbar-brand fw-bold" href="/index.html">
@@ -105,16 +106,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <li class="nav-item"><a class="nav-link" href="/index.html">Inicio</a></li>
         <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/animales.php">Animales</a></li>
         <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/como-adoptar.php">Cómo adoptar</a></li>
+        <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/solicitud_adopcion.php">Solicitud de adopción</a></li>
         <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/contacto.php">Contacto</a></li>
         <li class="nav-item ms-lg-3">
-          <a class="btn btn-outline-light btn-sm active" href="/BACKEND/Privada/login.php">
+          <a class="btn btn-outline-light btn-sm" href="/BACKEND/Privada/login.php">
             Iniciar sesión
+          </a>
+        </li>
+        <li class="nav-item ms-lg-3">
+          <a class="btn btn-outline-light btn-sm" href="/BACKEND/Privada/register.php">
+            Registrase
           </a>
         </li>
       </ul>
     </div>
   </div>
 </nav>
+
 
 <section class="hero-section d-flex align-items-center">
     <div class="container py-5">

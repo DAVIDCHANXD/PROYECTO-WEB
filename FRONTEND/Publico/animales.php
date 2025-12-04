@@ -81,10 +81,9 @@ function estadoSaludTexto($idEstado) {
 </head>
 <body class="animales-bg d-flex flex-column min-vh-100">
 
-<!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar">
   <div class="container">
-    <a class="navbar-brand fw-bold" href="/index.php">
+    <a class="navbar-brand fw-bold" href="/index.html">
       <span class="logo-pill">AC</span> AdoptaConAmor
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -101,6 +100,11 @@ function estadoSaludTexto($idEstado) {
         <li class="nav-item ms-lg-3">
           <a class="btn btn-outline-light btn-sm" href="/BACKEND/Privada/login.php">
             Iniciar sesión
+          </a>
+        </li>
+        <li class="nav-item ms-lg-3">
+          <a class="btn btn-outline-light btn-sm" href="/BACKEND/Privada/register.php">
+            Registrase
           </a>
         </li>
       </ul>

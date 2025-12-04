@@ -1,0 +1,159 @@
+/* ===================================================================== */
+/* =============== ESTILOS ESPECÍFICOS: SOLICITUD ADOPCIÓN ============= */
+/* ===================================================================== */
+
+/* Fondo general similar al de animales, pero con contenido centrado */
+.solicitud-main {
+  background:
+    radial-gradient(circle at top left, #fed7aa 0, #fb7185 35%, #1f2937 80%);
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.solicitud-main .container {
+  max-width: 980px;
+}
+
+/* ---------- ENCABEZADO (TÍTULO + PÁRRAFO) ---------- */
+
+.solicitud-header {
+  background: rgba(15, 23, 42, 0.96);
+  border-radius: var(--ac-card-radius);
+  padding: 1.75rem 1.5rem;
+  box-shadow: var(--ac-shadow-soft);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  color: #e5e7eb;
+}
+
+.solicitud-header h1 {
+  margin-bottom: 0.35rem;
+  font-size: clamp(1.7rem, 2vw + 1rem, 2.2rem);
+  font-weight: 700;
+  color: #f9fafb;
+}
+
+.solicitud-header p {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+  color: rgba(249, 250, 251, 0.78);
+}
+
+/* ---------- ALERTAS ---------- */
+
+.solicitud-main .alert {
+  border-radius: 999px;
+  padding-block: 0.6rem;
+  padding-inline: 1.25rem;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+/* ---------- FORMULARIO PRINCIPAL ---------- */
+
+.solicitud-form {
+  background: #ffffff;
+  border-radius: var(--ac-card-radius);
+  padding: 1.75rem 1.5rem 1.5rem;
+  margin-top: 1.5rem;
+  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.15);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.solicitud-form .form-label {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.solicitud-form .form-control,
+.solicitud-form .form-select,
+.solicitud-form textarea {
+  border-radius: 0.75rem;
+  border-color: rgba(148, 163, 184, 0.6);
+}
+
+.solicitud-form .form-control:focus,
+.solicitud-form .form-select:focus,
+.solicitud-form textarea:focus {
+  border-color: var(--ac-primary);
+  box-shadow: 0 0 0 0.12rem rgba(249, 115, 22, 0.35);
+}
+
+.solicitud-form .form-text {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.solicitud-form .btn-primary {
+  border-radius: 999px;
+  padding-inline: 1.6rem;
+  padding-block: 0.6rem;
+  font-weight: 600;
+}
+
+/* ---------- SEPARADOR Y TÍTULO DEL CATÁLOGO ---------- */
+
+.solicitud-main hr {
+  margin-block: 3rem 2rem;
+  border-top-color: rgba(148, 163, 184, 0.45);
+}
+
+.solicitud-catalogo-titulo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.solicitud-catalogo-titulo::before {
+  content: "";
+  width: 34px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--ac-primary), var(--ac-accent));
+}
+
+/* ---------- TARJETAS DEL CATÁLOGO DE ANIMALES ---------- */
+
+.solicitud-animal-card {
+  border-radius: var(--ac-card-radius);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.18);
+  background: #ffffff;
+  overflow: hidden;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.solicitud-animal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.32);
+  background-color: #ffffff;
+}
+
+.solicitud-animal-card img.card-img-top {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.solicitud-animal-card .card-title {
+  font-weight: 600;
+}
+
+.solicitud-animal-card .card-text.small {
+  font-size: 0.85rem;
+}
+
+.solicitud-animal-card .btn {
+  border-radius: 999px;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 575.98px) {
+  .solicitud-header {
+    padding: 1.3rem 1rem;
+  }
+
+  .solicitud-form {
+    padding: 1.35rem 1rem 1.3rem;
+  }
+}

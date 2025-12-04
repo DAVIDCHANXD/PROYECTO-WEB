@@ -7,11 +7,11 @@ if (!isset($_SESSION['id_usuario'])) {
     exit;
 }
 
+$nombreSesion = $_SESSION['nombre'] ?? 'Usuario';
+
 require_once __DIR__ . '/../DATABASE/conexion.php';
 
 $mensaje = $_GET['msg'] ?? null;
-
-// Obtenemos todos los animales con su foto principal (si tiene)
 $animales = [];
 $error = null;
 
@@ -38,7 +38,6 @@ try {
     $error = "Error al obtener animales: " . $e->getMessage();
 }
 
-// === Funciones de texto para mostrar más bonito ===
 function tipoTexto($idTipo)
 {
     switch ((int)$idTipo) {
@@ -89,12 +88,33 @@ function siNoTexto($valor)
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/FRONTEND/CSS/index.css">
+    <link rel="stylesheet" href="/FRONTEND/CSS/dashboard.css">
 </head>
-<body class="bg-light">
-
+<body class="dashboard-bg">
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar dashboard-navbar">
+  <div class="container">
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="dashboard.php">
+      <span class="logo-pill">AC</span>
+      <span>Panel AdoptaConAmor</span>
+    </a>
+    <div class="ms-auto d-flex align-items-center">
+      <span class="navbar-text me-3">
+        Hola, <?php echo htmlspecialchars($nombreSesion, ENT_QUOTES, 'UTF-8'); ?>
+      </span>
+      <a href="logout.php" class="btn btn-outline-light btn-sm">
+        Cerrar sesión
+      </a>
+    </div>
+  </div>
+</nav>
 <div class="container py-4">
-    <h1 class="mb-4">Gestión de animales</h1>
-
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h4 mb-0">Gestión de animales</h1>
+        <a href="dashboard.php" class="btn btn-sm btn-secondary">
+            ← Volver al panel
+        </a>
+    </div>
     <?php if ($mensaje === 'alta_ok'): ?>
         <div class="alert alert-success">Animal registrado correctamente.</div>
     <?php elseif ($mensaje === 'editar_ok'): ?>
@@ -106,18 +126,14 @@ function siNoTexto($valor)
     <?php endif; ?>
 
     <?php if ($error): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+        <div class="alert alert-danger"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></div>
     <?php endif; ?>
 
     <div class="mb-3">
         <a href="animales_alta.php" class="btn btn-primary">
             + Nuevo animal
         </a>
-        <a href="dashboard.php" class="btn btn-secondary">
-            Volver al panel
-        </a>
     </div>
-
     <?php if (empty($animales)): ?>
         <div class="alert alert-info">No hay animales registrados todavía.</div>
     <?php else: ?>
@@ -144,21 +160,21 @@ function siNoTexto($valor)
                         <td><?= (int)$a['id_animal'] ?></td>
                         <td>
                             <?php if (!empty($a['foto_url'])): ?>
-                                <img src="<?= htmlspecialchars($a['foto_url']) ?>"
-                                     alt="Foto de <?= htmlspecialchars($a['nombre']) ?>"
+                                <img src="<?= htmlspecialchars($a['foto_url'], ENT_QUOTES, 'UTF-8') ?>"
+                                     alt="Foto de <?= htmlspecialchars($a['nombre'], ENT_QUOTES, 'UTF-8') ?>"
                                      style="width:80px;height:80px;object-fit:cover;border-radius:8px;">
                             <?php else: ?>
                                 <span class="text-muted">Sin foto</span>
                             <?php endif; ?>
                         </td>
-                        <td><?= htmlspecialchars($a['nombre']) ?></td>
-                        <td><?= htmlspecialchars(tipoTexto($a['id_tipo'])) ?></td>
-                        <td><?= htmlspecialchars(tamanoTexto($a['id_tamano'])) ?></td>
-                        <td><?= htmlspecialchars($a['edad_anios']) ?></td>
-                        <td><?= htmlspecialchars($a['sexo']) ?></td>
-                        <td><?= htmlspecialchars(estadoSaludTexto($a['id_estado_salud'])) ?></td>
-                        <td><?= htmlspecialchars(siNoTexto($a['adoptado'])) ?></td>
-                        <td><?= htmlspecialchars(siNoTexto($a['visible'])) ?></td>
+                        <td><?= htmlspecialchars($a['nombre'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars(tipoTexto($a['id_tipo']), ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars(tamanoTexto($a['id_tamano']), ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($a['edad_anios'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($a['sexo'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars(estadoSaludTexto($a['id_estado_salud']), ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars(siNoTexto($a['adoptado']), ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars(siNoTexto($a['visible']), ENT_QUOTES, 'UTF-8') ?></td>
                         <td>
                             <a href="animales_editar.php?id=<?= (int)$a['id_animal'] ?>"
                                class="btn btn-sm btn-warning">
@@ -177,6 +193,6 @@ function siNoTexto($valor)
         </div>
     <?php endif; ?>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

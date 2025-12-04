@@ -93,13 +93,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto align-items-lg-center">
-        <li class="nav-item"><a class="nav-link" href="../../index.html">Inicio</a></li>
-        <li class="nav-item"><a class="nav-link" href="animales.php">Animales</a></li>
-        <li class="nav-item"><a class="nav-link" href="como-adoptar.php">Cómo adoptar</a></li>
-        <li class="nav-item"><a class="nav-link active" href="contacto.php">Contacto</a></li>
+        <li class="nav-item"><a class="nav-link" href="/index.html">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/animales.php">Animales</a></li>
+        <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/como-adoptar.php">Cómo adoptar</a></li>
+        <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/solicitud_adopcion.php">Solicitud de adopción</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/FRONTEND/Publico/contacto.php">Contacto</a></li>
         <li class="nav-item ms-lg-3">
           <a class="btn btn-outline-light btn-sm" href="/BACKEND/Privada/login.php">
             Iniciar sesión
+          </a>
+        </li>
+        <li class="nav-item ms-lg-3">
+          <a class="btn btn-outline-light btn-sm" href="/BACKEND/Privada/register.php">
+            Registrase
           </a>
         </li>
       </ul>
