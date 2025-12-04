@@ -18,7 +18,7 @@
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar">
   <div class="container">
-    <a class="navbar-brand fw-bold" href="../../index.html">
+    <a class="navbar-brand fw-bold" href="/index.html">
       <span class="logo-pill">AC</span> AdoptaConAmor
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -27,9 +27,13 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto align-items-lg-center">
-        <li class="nav-item"><a class="nav-link active" href="../../index.html">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/index.html">Inicio</a></li>
         <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/animales.php">Animales</a></li>
         <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/como-adoptar.php">Cómo adoptar</a></li>
+
+        <!-- NUEVO: enlace a la solicitud de adopción -->
+        <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/solicitud_adopcion.php">Solicitud de adopción</a></li>
+
         <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/contacto.php">Contacto</a></li>
         <li class="nav-item ms-lg-3">
           <a class="btn btn-outline-light btn-sm" href="/BACKEND/Privada/login.php">
@@ -69,6 +73,10 @@
             </a>
             <a href="/FRONTEND/Publico/como-adoptar.php" class="btn btn-outline-light btn-lg">
               ¿Cómo funciona?
+            </a>
+            <!-- NUEVO: botón directo a la solicitud -->
+            <a href="/FRONTEND/Publico/solicitud_adopcion.php" class="btn btn-success btn-lg">
+              Quiero adoptar
             </a>
           </div>
           <p class="small text-white-50 mt-3">
@@ -142,6 +150,23 @@
               </p>
               <a href="/FRONTEND/Publico/contacto.php" class="stretched-link small fw-semibold">
                 Ir a contacto →
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- NUEVA TARJETA: llenar solicitud -->
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm border-0 feature-card">
+            <div class="card-body">
+              <div class="feature-icon mb-3">📝</div>
+              <h5 class="card-title">Llenar solicitud de adopción</h5>
+              <p class="card-text text-muted">
+                Completa un formulario con tus datos y la mascota que te interesa para iniciar
+                formalmente el proceso de adopción.
+              </p>
+              <a href="/FRONTEND/Publico/solicitud_adopcion.php" class="stretched-link small fw-semibold">
+                Llenar solicitud →
               </a>
             </div>
           </div>

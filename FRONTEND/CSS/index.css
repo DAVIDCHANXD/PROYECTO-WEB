@@ -1,4 +1,4 @@
-/* ---------- Variables de colores ---------- */
+/* ---------- VARIABLES DE COLORES (COMPARTIDAS INDEX + ANIMALES) ---------- */
 :root {
   --ac-primary: #f97316;        /* Naranja principal */
   --ac-primary-dark: #ea580c;   /* Naranja más oscuro */
@@ -8,7 +8,7 @@
   --ac-shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.18);
 }
 
-/* ---------- Global ---------- */
+/* ---------- GLOBAL ---------- */
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #111827;
@@ -88,7 +88,7 @@ a {
   color: #0f172a;
 }
 
-/* ---------- HERO ---------- */
+/* ---------- HERO (INDEX) ---------- */
 .hero-section {
   position: relative;
   overflow: hidden;
@@ -108,6 +108,7 @@ a {
   filter: blur(40px);
   opacity: 0.35;
 }
+
 .hero-section::before {
   width: 260px;
   height: 260px;
@@ -115,6 +116,7 @@ a {
   right: 10%;
   background: #fb7185;
 }
+
 .hero-section::after {
   width: 260px;
   height: 260px;
@@ -204,7 +206,7 @@ a {
   object-fit: cover;
 }
 
-/* ---------- SECCIÓN RESUMEN ---------- */
+/* ---------- SECCIÓN RESUMEN (INDEX) ---------- */
 section.bg-light {
   background: #f9fafb !important;
 }
@@ -244,13 +246,13 @@ section.bg-light {
   color: var(--ac-primary-dark);
 }
 
-/* ---------- FOOTER ---------- */
+/* ---------- FOOTER (COMPARTIDO) ---------- */
 .site-footer {
   background: var(--ac-bg-dark);
   border-top: 1px solid rgba(148, 163, 184, 0.35);
 }
 
-/* ---------- RESPONSIVE ---------- */
+/* ---------- RESPONSIVE HERO INDEX ---------- */
 @media (max-width: 991.98px) {
   .hero-section {
     text-align: center;
@@ -266,3 +268,97 @@ section.bg-light {
   }
 }
 
+/* ===================================================================== */
+/* =================== ESTILOS ESPECÍFICOS DE ANIMALES ================== */
+/* ===================================================================== */
+
+/* Fondo general para la página de animales: mismo gradiente del hero */
+.animales-bg {
+  background:
+    radial-gradient(circle at top left, #fed7aa 0, #fb7185 35%, #1f2937 80%);
+  min-height: 100vh;
+}
+
+/* Padding general del main en animales */
+.animales-main {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+/* Encabezado tipo hero para la página de animales */
+.animales-hero {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  padding-top: 3rem;
+  padding-bottom: 2.5rem;
+}
+
+.animales-hero::before,
+.animales-hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(40px);
+  opacity: 0.35;
+}
+
+.animales-hero::before {
+  width: 220px;
+  height: 220px;
+  top: -40px;
+  right: 10%;
+  background: #fb7185;
+}
+
+.animales-hero::after {
+  width: 220px;
+  height: 220px;
+  bottom: -60px;
+  left: 0;
+  background: #f97316;
+}
+
+.animales-hero .container {
+  position: relative;
+  z-index: 1;
+}
+
+.animales-hero h1 {
+  color: #f9fafb;
+}
+
+.animales-hero p {
+  color: rgba(249, 250, 251, 0.85);
+}
+
+/* Tarjetas del catálogo de animales */
+.animal-card {
+  border-radius: var(--ac-card-radius);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.18);
+  background: #ffffff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.animal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+  background-color: #ffffff;
+}
+
+/* Botón "Más información" o similar dentro de la tarjeta */
+.animal-card .btn-outline-primary {
+  border-radius: 999px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+              background-color 0.15s ease, color 0.15s ease;
+}
+
+.animal-card .btn-outline-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(248, 113, 113, 0.45);
+}
+
+/* Botón verde "Quiero adoptar" si lo usas en la card */
+.animal-card .btn-success {
+  border-radius: 999px;
+}

@@ -1,18 +1,34 @@
-/* Fondo general muy clarito para la página de animales */
-/* Ahora TODO el main de animales tiene el gradient */
-.animales-bg {
-  background:
-    radial-gradient(circle at top left, #fed7aa 0, #fb7185 35%, #0f172a 80%);
+/* ---------- Variables de colores (mismas que en index) ---------- */
+:root {
+  --ac-primary: #f97316;        /* Naranja principal */
+  --ac-primary-dark: #ea580c;   /* Naranja más oscuro */
+  --ac-accent: #fb7185;         /* Rosita acento */
+  --ac-bg-dark: #0f172a;        /* Azul muy oscuro */
+  --ac-card-radius: 1.25rem;
+  --ac-shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.18);
 }
 
-/* ---------- Encabezado de animales con fondo tipo hero del index ---------- */
+/* ---------- FONDO PÁGINA DE ANIMALES ---------- */
+/* Usa el mismo degradado del hero del index */
+.animales-bg {
+  background:
+    radial-gradient(circle at top left, #fed7aa 0, #fb7185 35%, #1f2937 80%);
+  min-height: 100vh;
+}
+
+/* Contenido principal de animales */
+.animales-main {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+/* ---------- Encabezado "hero" de animales ---------- */
 .animales-hero {
   position: relative;
   overflow: hidden;
   color: #fff;
-  padding-top: 3.5rem;
-  padding-bottom: 3.5rem;
-  background: transparent;  /* antes tenía el gradient */
+  padding-top: 3rem;
+  padding-bottom: 2.5rem;
 }
 
 /* Luces suaves como el hero del index */
@@ -41,13 +57,11 @@
   background: #f97316;
 }
 
-/* Para que el contenido quede por encima de las "luces" */
 .animales-hero .container {
   position: relative;
   z-index: 1;
 }
 
-/* Colores de textos en el encabezado */
 .animales-hero h1 {
   color: #f9fafb;
 }
@@ -56,22 +70,21 @@
   color: rgba(249, 250, 251, 0.85);
 }
 
-/* ====== HOVER TARJETAS Y BOTÓN EN ANIMALES ====== */
-
-/* Tarjetas de animales */
+/* ---------- Tarjetas del catálogo de animales ---------- */
 .animal-card {
   border-radius: var(--ac-card-radius);
   box-shadow: 0 10px 26px rgba(15, 23, 42, 0.18);
   background: #ffffff;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .animal-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+  background-color: #ffffff;
 }
 
-/* Botón "Más información" */
+/* Botón "Más información" o "Elegir esta mascota" dentro de la tarjeta */
 .animal-card .btn-outline-primary {
   border-radius: 999px;
   transition: transform 0.15s ease, box-shadow 0.15s ease,
@@ -81,4 +94,15 @@
 .animal-card .btn-outline-primary:hover {
   transform: translateY(-1px);
   box-shadow: 0 12px 28px rgba(248, 113, 113, 0.45);
+}
+
+/* Botón verde "Quiero adoptar" (si lo usas dentro de la card) */
+.animal-card .btn-success {
+  border-radius: 999px;
+}
+
+/* Footer de la página de animales sobre el fondo oscuro */
+.site-footer {
+  background: var(--ac-bg-dark);
+  border-top: 1px solid rgba(148, 163, 184, 0.35);
 }

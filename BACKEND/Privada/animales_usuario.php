@@ -1,7 +1,15 @@
 <?php
-// FRONTEND/Publico/animales.php
+// BACKEND/Privada/animales_usuario.php
+session_start();
 
-require_once __DIR__ . '/../../BACKEND/DATABASE/conexion.php';
+if (!isset($_SESSION['id_usuario'])) {
+    header('Location: login.php');
+    exit;
+}
+
+$nombreSesion = $_SESSION['nombre'] ?? 'Usuario';
+
+require_once __DIR__ . '/../DATABASE/conexion.php';
 
 $animales = [];
 $error = null;
@@ -69,55 +77,54 @@ function estadoSaludTexto($idEstado) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Animales en adopción - AdoptaConAmor</title>
+    <title>Catálogo de animales - Mi cuenta</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-
-    <!-- Tu CSS general (donde ya están las clases de animales) -->
     <link rel="stylesheet" href="/FRONTEND/CSS/index.css">
+    <link rel="stylesheet" href="/FRONTEND/CSS/dashboard.css">
 </head>
 <body class="animales-bg d-flex flex-column min-vh-100">
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar">
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar dashboard-navbar">
   <div class="container">
-    <a class="navbar-brand fw-bold" href="/index.php">
-      <span class="logo-pill">AC</span> AdoptaConAmor
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="/index.php">
+      <span class="logo-pill">AC</span>
+      <span>AdoptaConAmor</span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto align-items-lg-center">
-        <li class="nav-item"><a class="nav-link" href="/index.html">Inicio</a></li>
-        <li class="nav-item"><a class="nav-link active" href="/FRONTEND/Publico/animales.php">Animales</a></li>
-        <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/como-adoptar.php">Cómo adoptar</a></li>
-        <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/solicitud_adopcion.php">Solicitud de adopción</a></li>
-        <li class="nav-item"><a class="nav-link" href="/FRONTEND/Publico/contacto.php">Contacto</a></li>
-        <li class="nav-item ms-lg-3">
-          <a class="btn btn-outline-light btn-sm" href="/BACKEND/Privada/login.php">
-            Iniciar sesión
-          </a>
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a href="/BACKEND/Privada/panel_usuario.php" class="nav-link">Mi panel</a>
+        </li>
+        <li class="nav-item">
+          <a href="/BACKEND/Privada/animales_usuario.php" class="nav-link active">Catálogo de animales</a>
         </li>
       </ul>
+      <div class="d-flex align-items-center">
+        <span class="navbar-text me-3">
+          Hola, <?= htmlspecialchars($nombreSesion) ?>
+        </span>
+        <a href="logout.php" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
+      </div>
     </div>
   </div>
 </nav>
 
 <main class="flex-grow-1 animales-main">
 
-  <!-- HERO DE ANIMALES -->
+  <!-- HERO DE ANIMALES (PRIVADO) -->
   <section class="animales-hero">
     <div class="container">
-      <h1 class="mb-2">Animales en adopción</h1>
+      <h1 class="mb-2">Catálogo de animales</h1>
       <p class="mb-0">
-        Estas son las mascotas que actualmente buscan un hogar.  
-        Haz clic en <strong>Más información</strong> para ver los detalles y, si te interesa,
-        envía una solicitud de adopción.
+        Desde aquí puedes ver todas las mascotas disponibles.  
+        Usa el botón <strong>Quiero adoptar</strong> para regresar a tu panel con esa mascota seleccionada.
       </p>
     </div>
   </section>
@@ -140,7 +147,7 @@ function estadoSaludTexto($idEstado) {
         <div class="row g-4">
           <?php foreach ($animales as $a): ?>
             <?php
-              $foto = $a['foto_url'] ?: '/FRONTEND/IMG/sin-foto.png'; // crea una imagen por si no hay
+              $foto     = $a['foto_url'] ?: '/FRONTEND/IMG/sin-foto.png';
               $adoptado = (int)$a['adoptado'] === 1;
             ?>
             <div class="col-md-4">
@@ -187,7 +194,7 @@ function estadoSaludTexto($idEstado) {
                     </button>
 
                     <?php if (!$adoptado): ?>
-                      <a href="/FRONTEND/Publico/solicitud_adopcion.php?id_animal=<?= (int)$a['id_animal'] ?>"
+                      <a href="/BACKEND/Privada/panel_usuario.php?id_animal=<?= (int)$a['id_animal'] ?>"
                          class="btn btn-success btn-sm">
                         Quiero adoptar
                       </a>
@@ -234,23 +241,19 @@ function estadoSaludTexto($idEstado) {
         </div>
       </div>
       <div class="modal-footer">
-        <a href="#" id="modalBtnAdoptar" class="btn btn-success">
-          Quiero adoptar
-        </a>
+        <!-- Nota: el botón de adoptar solo sirve como recordatorio visual; el flujo principal es la card -->
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer class="text-white text-center py-3 mt-auto site-footer">
   <div class="container">
     <small>&copy; <?= date('Y') ?> AdoptaConAmor · Proyecto final</small>
   </div>
 </footer>
 
-<!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -259,7 +262,6 @@ document.addEventListener('click', function (event) {
   const btn = event.target.closest('.btn-mas-info');
   if (!btn) return;
 
-  const id     = btn.dataset.id || '';
   const nombre = btn.dataset.nombre || '';
   const tipo   = btn.dataset.tipo || '';
   const tamano = btn.dataset.tamano || '';
@@ -281,9 +283,6 @@ document.addEventListener('click', function (event) {
   const img = document.getElementById('modalAnimalImg');
   img.src = foto;
   img.alt = 'Foto de ' + nombre;
-
-  const btnAdoptar = document.getElementById('modalBtnAdoptar');
-  btnAdoptar.href = '/FRONTEND/Publico/solicitud_adopcion.php?id_animal=' + encodeURIComponent(id);
 });
 </script>
 

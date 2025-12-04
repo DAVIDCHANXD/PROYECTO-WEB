@@ -15,7 +15,6 @@ if (!isset($_SESSION['id_usuario'])) {
 $nombre = $_SESSION['nombre'] ?? 'Usuario';
 
 // OJO: revisa que la carpeta se llame exactamente "DATABASE" así en tu servidor.
-// Si tu carpeta es "Database" o "database", cambia aquí.
 require_once __DIR__ . '/../DATABASE/conexion.php';
 
 $totalAnimales = 0;
@@ -46,21 +45,15 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
     <title>Panel - AdoptaConAmor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- AQUÍ ESTABA EL ERROR: rel="estilos" / rel="iconos" -->
+    <!-- Bootstrap y Bootstrap Icons -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-    <!-- Rutas a tus CSS (ajusta si es necesario) -->
-    <!-- Si tu DocumentRoot es la carpeta del proyecto, esto funciona: -->
+    <!-- Rutas a tus CSS -->
     <link rel="stylesheet" href="/FRONTEND/CSS/index.css">
     <link rel="stylesheet" href="/FRONTEND/CSS/dashboard.css">
-
-    <!-- Si ves que no carga el CSS, prueba estas rutas relativas:
-    <link rel="stylesheet" href="../../FRONTEND/CSS/index.css">
-    <link rel="stylesheet" href="../../FRONTEND/CSS/dashboard.css">
-    -->
 </head>
 <body class="d-flex flex-column min-vh-100 dashboard-bg">
 
@@ -100,6 +93,7 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
 <?php endif; ?>
 
 <div class="container py-4">
+    <!-- Encabezado -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card border-0 dashboard-header-card">
@@ -126,6 +120,7 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
         </div>
     </div>
 
+    <!-- Tarjetas de resumen -->
     <div class="row g-4 mb-4">
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-stat-card">
@@ -187,11 +182,13 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
         </div>
     </div>
 
+    <!-- Secciones del panel -->
     <div class="row g-4">
         <div class="col-12">
             <h2 class="h5 mb-3">Secciones del panel</h2>
         </div>
 
+        <!-- Sección: Animales (MÓDULO ACTIVO) -->
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-section-card">
                 <div class="card-body d-flex flex-column">
@@ -200,38 +197,41 @@ $perfilActualizado = isset($_GET['perfil']) && $_GET['perfil'] === '1';
                         Registro y gestión de animales en adopción (altas, bajas, cambios, fotos, estado).
                     </p>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="badge bg-secondary">En desarrollo</span>
-                        <a href="#" class="btn btn-primary btn-sm disabled">Entrar</a>
+                        <span class="badge bg-success">Módulo activo</span>
+                        <a href="animales_listar.php" class="btn btn-primary btn-sm">Entrar</a>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Sección: Solicitudes de adopción -->
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-section-card">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Solicitudes de adopción</h5>
                     <p class="card-text flex-grow-1">
-                        Aquí podrás revisar quién desea adoptar, aprobar o rechazar solicitudes y dejar comentarios.
+                        Revisión básica de solicitudes enviadas desde la parte pública
+                        (módulo en versión simple para el proyecto).
                     </p>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="badge bg-secondary">En desarrollo</span>
-                        <a href="#" class="btn btn-primary btn-sm disabled">Entrar</a>
+                        <span class="badge bg-warning text-dark">Versión básica</span>
+                        <a href="solicitudes.php" class="btn btn-primary btn-sm">Entrar</a>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Sección: Usuarios -->
         <div class="col-md-4">
             <div class="card h-100 border-0 dashboard-section-card">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Usuarios</h5>
                     <p class="card-text flex-grow-1">
-                        Administración de usuarios del panel, roles básicos y control de acceso.
+                        Administración básica de los usuarios que pueden entrar al panel.
                     </p>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="badge bg-secondary">En desarrollo</span>
-                        <a href="#" class="btn btn-primary btn-sm disabled">Entrar</a>
+                        <span class="badge bg-warning text-dark">Versión básica</span>
+                        <a href="usuarios_admin.php" class="btn btn-primary btn-sm">Entrar</a>
                     </div>
                 </div>
             </div>
