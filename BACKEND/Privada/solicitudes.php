@@ -11,8 +11,6 @@ require_once __DIR__ . '/../DATABASE/conexion.php';
 
 $idRolSesion   = (int)($_SESSION['id_rol'] ?? 0);
 $nombreSesion  = $_SESSION['nombre'] ?? 'Administrador';
-
-// ================= FUNCIONES AUXILIARES =================
 function estadoTexto($id)
 {
     switch ((int)$id) {
@@ -24,7 +22,6 @@ function estadoTexto($id)
         default: return 'Desconocido';
     }
 }
-
 function estadoBadgeClass($id)
 {
     switch ((int)$id) {
@@ -36,7 +33,6 @@ function estadoBadgeClass($id)
         default: return 'bg-secondary';
     }
 }
-
 function resumenMensaje($texto, $max = 160)
 {
     if ($texto === null) return '';
@@ -48,11 +44,8 @@ function resumenMensaje($texto, $max = 160)
     }
     return $limpio;
 }
-
 $msg = $_GET['msg'] ?? null;
 $err = $_GET['err'] ?? null;
-
-// ================== POST: CAMBIAR ESTADO / ELIMINAR ==================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = $_POST['accion'] ?? '';
 
@@ -97,8 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
-
-// ================== OBTENER SOLICITUDES ==================
 $solicitudes = [];
 try {
     $sql = "SELECT 
@@ -131,7 +122,6 @@ try {
     <link rel="stylesheet" href="/FRONTEND/CSS/dashboard.css">
 </head>
 <body class="dashboard-bg d-flex flex-column min-vh-100">
-
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar dashboard-navbar">
   <div class="container">
     <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="dashboard.php">
@@ -146,6 +136,7 @@ try {
       <ul class="navbar-nav me-auto">
         <li class="nav-item"><a href="dashboard.php" class="nav-link">Dashboard</a></li>
         <li class="nav-item"><a href="animales_listar.php" class="nav-link">Animales</a></li>
+        <li class="nav-item"><a href="solicitudes.php" class="nav-link active">Solicitudes</a></li>
         <li class="nav-item"><a href="usuarios_listar.php" class="nav-link">Usuarios</a></li>
       </ul>
       <div class="d-flex align-items-center">
@@ -157,15 +148,19 @@ try {
     </div>
   </div>
 </nav>
-
 <main class="flex-grow-1">
   <div class="container py-4">
-
-    <h1 class="h4 mb-1">Solicitudes de adopción</h1>
-    <p class="text-muted mb-3">
-      Revisa y actualiza el estado de las solicitudes enviadas por los usuarios.
-    </p>
-
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+      <div>
+        <h1 class="h4 mb-1">Solicitudes de adopción</h1>
+        <p class="text-muted mb-0">
+          Revisa y actualiza el estado de las solicitudes enviadas por los usuarios.
+        </p>
+      </div>
+      <a href="dashboard.php" class="btn btn-sm btn-secondary mt-2 mt-md-0">
+        ← Volver al panel
+      </a>
+    </div>
     <?php if ($msg): ?>
       <?php if ($msg === 'actualizado'): ?>
         <div class="alert alert-success">Estado actualizado correctamente.</div>
@@ -175,7 +170,6 @@ try {
         <div class="alert alert-success">Datos de la solicitud actualizados correctamente.</div>
       <?php endif; ?>
     <?php endif; ?>
-
     <?php if ($err): ?>
       <div class="alert alert-danger">
         <?php
@@ -188,7 +182,6 @@ try {
         ?>
       </div>
     <?php endif; ?>
-
     <?php if (empty($solicitudes)): ?>
       <div class="alert alert-info">
         No hay solicitudes registradas por el momento.
@@ -235,7 +228,6 @@ try {
                 <form method="post" class="d-flex gap-2 align-items-center">
                   <input type="hidden" name="accion" value="cambiar_estado">
                   <input type="hidden" name="id_solicitud" value="<?= $id ?>">
-
                   <select name="id_estado_solicitud" class="form-select form-select-sm">
                     <option value="1" <?= $s['id_estado_solicitud']==1 ? 'selected' : '' ?>>Pendiente</option>
                     <option value="2" <?= $s['id_estado_solicitud']==2 ? 'selected' : '' ?>>En revisión</option>
@@ -243,7 +235,6 @@ try {
                     <option value="4" <?= $s['id_estado_solicitud']==4 ? 'selected' : '' ?>>Rechazada</option>
                     <option value="5" <?= $s['id_estado_solicitud']==5 ? 'selected' : '' ?>>Cancelada</option>
                   </select>
-
                   <button type="submit" class="btn btn-sm btn-primary">
                     Guardar
                   </button>
@@ -264,10 +255,8 @@ try {
         </table>
       </div>
     <?php endif; ?>
-
   </div>
 </main>
-
 <footer class="text-white text-center py-3 mt-auto site-footer">
   <div class="container">
     <small>&copy; <?= date('Y') ?> AdoptaConAmor · Panel administrador</small>
