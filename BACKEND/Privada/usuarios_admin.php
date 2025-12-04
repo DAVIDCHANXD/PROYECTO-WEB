@@ -202,7 +202,6 @@ try {
       <ul class="navbar-nav me-auto">
         <li class="nav-item"><a href="/BACKEND/Privada/dashboard.php" class="nav-link">Dashboard</a></li>
         <li class="nav-item"><a href="/BACKEND/Privada/animales_listar.php" class="nav-link">Animales</a></li>
-        <li class="nav-item"><a href="/BACKEND/Privada/usuarios_listar.php" class="nav-link">Solicitudes</a></li>
         <li class="nav-item"><a href="/BACKEND/Privada/usuarios_admin.php" class="nav-link active">Usuarios</a></li>
       </ul>
       <div class="d-flex align-items-center">
