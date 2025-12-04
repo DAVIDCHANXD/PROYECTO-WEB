@@ -92,7 +92,7 @@ function tipoTexto($idTipo) {
 
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar dashboard-navbar">
   <div class="container">
-    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="/index.php">
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="/index.html">
       <span class="logo-pill">AC</span>
       <span>AdoptaConAmor</span>
     </a>
