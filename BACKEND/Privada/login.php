@@ -167,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <a href="register.php">Registrarte</a>
                     </p>
                     <p class="text-center mt-2 mb-0">
-                        <a href="/index.php">← Volver al sitio público</a>
+                        <a href="/index.html">← Volver al sitio público</a>
                     </p>
 
                 </div>
